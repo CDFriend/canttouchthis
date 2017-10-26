@@ -1,0 +1,19 @@
+apply plugin: 'java'
+
+sourceSets {
+    main {
+        java {
+            srcDir 'src'
+        }
+    }
+}
+
+task run_server(type:JavaExec) {
+    main = 'canttouchthis.server.Main'
+    classpath = sourceSets.main.runtimeClasspath
+}
+
+task run_client(type:JavaExec) {
+    main = 'canttouchthis.client.Main'
+    classpath = sourceSets.main.runtimeClasspath
+}
