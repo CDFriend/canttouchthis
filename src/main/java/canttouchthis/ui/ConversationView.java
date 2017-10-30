@@ -81,6 +81,8 @@ public class ConversationView extends JFrame {
     }
 
     public void updateConversation() {
+        // re-render all messages
+        chatPane.setText("");
         Iterator<Message> i = model.messages();
         while (i.hasNext()) {
             renderMessage(i.next());
