@@ -11,7 +11,7 @@ import javax.swing.*;
  */
 public class ConversationView extends JFrame {
 
-    public ConversationModel model;
+    protected ConversationModel model;
 
     private final int FRAME_WIDTH = 300;
     private final int FRAME_HEIGHT = 400;
@@ -19,8 +19,9 @@ public class ConversationView extends JFrame {
 
     private final SimpleDateFormat date_format = new SimpleDateFormat("HH:mm:ss");
 
-    private JTextPane chatPane;
-    private JTextField sendField;
+    protected JTextPane chatPane;
+    protected JTextField sendField;
+    protected JButton sendButton;
 
     public ConversationView(ConversationModel model) {
         super("canttouchthis");
@@ -66,7 +67,7 @@ public class ConversationView extends JFrame {
         c.fill = GridBagConstraints.HORIZONTAL;
         pane.add(sendField, c);
 
-        JButton sendButton = new JButton("Send");
+        sendButton = new JButton("Send");
         c.gridx = 1;
         c.gridy = 1;
         c.weightx = 0.1;
