@@ -1,8 +1,9 @@
 package canttouchthis.ui;
 
+import canttouchthis.common.Message;
 import java.awt.*;
+import java.text.SimpleDateFormat;
 import javax.swing.*;
-import javax.swing.text.html.HTMLEditorKit;
 
 /**
  * Window for sending and recieving chat messages (client or server side).
@@ -12,6 +13,11 @@ public class ConversationView extends JFrame {
     private final int FRAME_WIDTH = 300;
     private final int FRAME_HEIGHT = 400;
     private final int COMP_INSETS = 4;
+
+    private final SimpleDateFormat date_format = new SimpleDateFormat("HH:mm:ss");
+
+    private JTextPane chatPane;
+    private JTextField sendField;
 
     public ConversationView() {
         super("canttouchthis");
@@ -29,7 +35,7 @@ public class ConversationView extends JFrame {
         c.insets = new Insets(COMP_INSETS, COMP_INSETS, COMP_INSETS, COMP_INSETS);
 
         // chat window
-        JTextPane chatPane = new JTextPane();
+        chatPane = new JTextPane();
         JScrollPane chatScroll = new JScrollPane(chatPane);
 
         c.gridx = 0;
@@ -43,12 +49,8 @@ public class ConversationView extends JFrame {
 
         c.gridwidth = 1;
 
-        // add styled test string
-        chatPane.setEditorKit(new HTMLEditorKit());
-        chatPane.setText("<b>Whoa!!!</b>");
-
         // send field and button
-        JTextField msgField = new JTextField(20);
+        sendField = new JTextField(20);
         c.gridx = 0;
         c.gridy = 1;
         c.weightx = 0.9;
@@ -57,7 +59,7 @@ public class ConversationView extends JFrame {
         c.ipady = 20;
         c.anchor = GridBagConstraints.CENTER;
         c.fill = GridBagConstraints.HORIZONTAL;
-        pane.add(msgField, c);
+        pane.add(sendField, c);
 
         JButton sendButton = new JButton("Send");
         c.gridx = 1;
@@ -71,6 +73,14 @@ public class ConversationView extends JFrame {
         pane.add(sendButton, c);
 
         pack();
+    }
+
+    public void renderMessage(Message m) {
+        String rendered = String.format("[%s] %s: %s\n", date_format.format(m.timestamp),
+                m.sender, m.message);
+
+        // TODO: do this more efficiently and add styling
+        chatPane.setText(chatPane.getText() + rendered);
     }
 
 }
