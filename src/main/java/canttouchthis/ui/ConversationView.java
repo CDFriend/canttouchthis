@@ -3,12 +3,15 @@ package canttouchthis.ui;
 import canttouchthis.common.Message;
 import java.awt.*;
 import java.text.SimpleDateFormat;
+import java.util.Iterator;
 import javax.swing.*;
 
 /**
  * Window for sending and recieving chat messages (client or server side).
  */
 public class ConversationView extends JFrame {
+
+    public ConversationModel model;
 
     private final int FRAME_WIDTH = 300;
     private final int FRAME_HEIGHT = 400;
@@ -19,8 +22,10 @@ public class ConversationView extends JFrame {
     private JTextPane chatPane;
     private JTextField sendField;
 
-    public ConversationView() {
+    public ConversationView(ConversationModel model) {
         super("canttouchthis");
+
+        this.model = model;
 
         setResizable(false);
         setPreferredSize(new Dimension(FRAME_WIDTH, FRAME_HEIGHT));
@@ -75,7 +80,14 @@ public class ConversationView extends JFrame {
         pack();
     }
 
-    public void renderMessage(Message m) {
+    public void updateConversation() {
+        Iterator<Message> i = model.messages();
+        while (i.hasNext()) {
+            renderMessage(i.next());
+        }
+    }
+
+    private void renderMessage(Message m) {
         String rendered = String.format("[%s] %s: %s\n", date_format.format(m.timestamp),
                 m.sender, m.message);
 
