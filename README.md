@@ -1,4 +1,6 @@
 # canttouchthis
+[![Build Status](https://travis-ci.org/CDFriend/canttouchthis.svg?branch=master)](https://travis-ci.org/CDFriend/canttouchthis)
+
 A secure instant-messaging application based on the Java Cryptographic
 Architecture.
 
