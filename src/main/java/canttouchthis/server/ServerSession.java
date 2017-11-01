@@ -1,6 +1,8 @@
 package canttouchthis.server;
 
+import canttouchthis.common.Message;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -45,6 +47,12 @@ public class ServerSession {
 
         channel = s;
 
+    }
+
+    public void sendMessage(Message m) throws IOException {
+        // TODO: encrypt object before writing
+        ObjectOutputStream oos = new ObjectOutputStream(channel.getOutputStream());
+        oos.writeObject(m);
     }
 
 }

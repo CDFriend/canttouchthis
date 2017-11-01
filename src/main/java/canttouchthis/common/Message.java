@@ -1,12 +1,13 @@
 package canttouchthis.common;
 
 import java.util.Date;
+import java.io.Serializable;
 
 /**
  * Container class for chat messages. This will likely change as more crypto
  * stuff gets added.
  */
-public class Message {
+public class Message implements Serializable {
 
     public final String sender;
     public final String reciever;
