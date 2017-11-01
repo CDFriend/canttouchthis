@@ -8,6 +8,7 @@ dependencies {
     testCompile 'junit:junit:4.12'
 }
 
+// Production and test source sets
 sourceSets {
     main {
         java {
@@ -22,6 +23,14 @@ sourceSets {
     }
 }
 
+// Test options
+test {
+    testLogging {
+        events "passed", "failed", "skipped"
+    }
+}
+
+// Custom build tasks
 task run_server(type:JavaExec) {
     main = 'canttouchthis.server.Main'
     classpath = sourceSets.main.runtimeClasspath
