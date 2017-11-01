@@ -1,10 +1,9 @@
-package ctttest.server;
+package ctttest.net;
 
 import canttouchthis.common.Message;
 import canttouchthis.server.ServerSession;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.net.InetAddress;
 import java.net.Socket;
