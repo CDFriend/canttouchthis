@@ -30,6 +30,16 @@ public class ServerSession {
         this.port = port;
     }
 
+    public void close() {
+        try {
+            this.channel.close();
+            this.server.close();
+        }
+        catch (IOException ex) {
+            ex.printStackTrace(System.err);
+        }
+    }
+
     /**
      * Block until a connection with a client has been established.
      * Initializes server and channel objects.
