@@ -33,19 +33,29 @@ public class ServerSession {
     /**
      * Block until a connection with a client has been established.
      * Initializes server and channel objects.
+     *
+     * @return True if the connection was successfully established and false if
+     * it failed.
      */
-    public void waitForConnection() throws IOException {
+    public boolean waitForConnection() {
 
         // Create a new server object. May throw an IOException if there is
         // an error opening the port.
-        server = new ServerSocket(port);
 
         // Block until a TCP connection is established.
-        Socket s = server.accept();
+        Socket s;
+        try {
+            server = new ServerSocket(port);
+            s = server.accept();
+        }
+        catch (IOException ex) {
+            return false;
+        }
 
         //TODO: check authentication and perform key exchange
 
         channel = s;
+        return true;
 
     }
 
