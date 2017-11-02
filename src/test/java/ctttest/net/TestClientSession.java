@@ -96,6 +96,7 @@ public class TestClientSession extends TestCase {
                 s.close();
             }
             catch (IOException|ClassNotFoundException ex) {
+                ex.printStackTrace(System.err);
                 success = false;
             }
 

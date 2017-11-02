@@ -110,6 +110,7 @@ public class TestServerSession extends TestCase {
                 s.close();
             }
             catch (IOException|ClassNotFoundException ex) {
+                ex.printStackTrace(System.err);
                 success = false;
             }
             success = true;
