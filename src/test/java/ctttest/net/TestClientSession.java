@@ -30,17 +30,17 @@ public class TestClientSession extends TestCase {
         server.start();
 
         // EXEC
-        sess.connect();
-
-        // VERIFY
         boolean success = true;
         try {
-            server.join(30000);
+            Thread.sleep(3000);
+            sess.connect();
+            server.join();
         }
         catch (InterruptedException ex) {
             success = false;
         }
 
+        // VERIFY
         assertTrue(success);
         assertTrue(server.success);
     }
@@ -54,9 +54,10 @@ public class TestClientSession extends TestCase {
         // EXEC
         boolean success = true;
         try {
+            Thread.sleep(3000);
             sess.connect();
             sess.sendMessage(m);
-            server.join(30000);
+            server.join();
         }
         catch (IOException|InterruptedException ex) {
             success = false;
@@ -95,7 +96,7 @@ public class TestClientSession extends TestCase {
 
                 s.close();
             }
-            catch (IOException|ClassNotFoundException ex) {
+            catch (Exception ex) {
                 ex.printStackTrace(System.err);
                 success = false;
             }

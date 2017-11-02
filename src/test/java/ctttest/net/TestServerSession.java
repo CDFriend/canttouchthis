@@ -37,7 +37,7 @@ public class TestServerSession extends TestCase {
         boolean success = session.waitForConnection();
 
         try {
-            conThread.join(30000);
+            conThread.join();
         }
         catch (InterruptedException ex) {
             assertTrue("Connection thread interrupted!", false);
@@ -67,7 +67,7 @@ public class TestServerSession extends TestCase {
         }
 
         try {
-            conThread.join(30000);
+            conThread.join();
         }
         catch (InterruptedException ex) {
             assertTrue("Connection thread interrupted!", false);
@@ -98,8 +98,10 @@ public class TestServerSession extends TestCase {
         }
 
         public void run() {
+            Socket s;
             try {
-                Socket s = new Socket(addr, port);
+                Thread.sleep(3000);
+                s = new Socket(addr, port);
 
                 // try to get a message from the server
                 if (tryReadMessage) {
@@ -109,7 +111,7 @@ public class TestServerSession extends TestCase {
 
                 s.close();
             }
-            catch (IOException|ClassNotFoundException ex) {
+            catch (Exception ex) {
                 ex.printStackTrace(System.err);
                 success = false;
             }
