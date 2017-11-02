@@ -16,8 +16,6 @@ public class TestIntegrityChecking extends TestCase {
 
         byte[] hash = IntegrityChecking.generateMessageDigest(message);
 
-        System.out.println(hash[0]);
-
         assertEquals(32, hash.length);
 
     }
