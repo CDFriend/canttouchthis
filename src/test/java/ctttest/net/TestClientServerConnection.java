@@ -11,8 +11,16 @@ import java.net.UnknownHostException;
 
 import junit.framework.*;
 
+/**
+ * Tests ensuring that ClientSession and ServerSession can exchange messages.
+ */
 public class TestClientServerConnection extends TestCase {
 
+    /**
+     * Checks that a ClientSession can connect to a ServerSession.
+     *
+     * @throws UnknownHostException If localhost cannot be found.
+     */
     public void testClientReceivesServerMessage() throws UnknownHostException {
         // SETUP
         ServerSession s = new ServerSession();
@@ -42,6 +50,11 @@ public class TestClientServerConnection extends TestCase {
         assertTrue(m.timestamp.equals(recv.timestamp));
     }
 
+    /**
+     * Checks that a ServerSession can send a Message to a ClientSession.
+     *
+     * @throws UnknownHostException If localhost cannot be found.
+     */
     public void testServerRecievesClientMessage() throws UnknownHostException {
         // SETUP
         ServerSession s = new ServerSession();

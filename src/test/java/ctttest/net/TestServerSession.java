@@ -6,13 +6,14 @@ import canttouchthis.common.Message;
 import canttouchthis.server.ServerSession;
 
 import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.net.InetAddress;
-import java.net.Socket;
 import java.net.UnknownHostException;
 
 import junit.framework.*;
 
+/**
+ * Tests the ServerSession object against a generic websocket client.
+ */
 public class TestServerSession extends TestCase {
 
     ServerSession session;

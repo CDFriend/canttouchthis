@@ -7,6 +7,10 @@ import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+/**
+ * Handles sending and recieving Message objects and key exchange on the
+ * server side.
+ */
 public class ServerSession {
 
     public static final int DEFAULT_PORT = 50000;
@@ -31,17 +35,8 @@ public class ServerSession {
         this.port = port;
     }
 
-    public void close() {
-        try {
-            this.channel.close();
-            this.server.close();
-        }
-        catch (IOException ex) {
-            ex.printStackTrace(System.err);
-        }
-    }
-
     /**
+     * Begin listening on the desired port for websocket connections.
      * Block until a connection with a client has been established.
      * Initializes server and channel objects.
      *
@@ -70,12 +65,38 @@ public class ServerSession {
 
     }
 
+    /**
+     * Closes the server session.  The server will continue to use its port until
+     * this is called!.
+     */
+    public void close() {
+        try {
+            this.channel.close();
+            this.server.close();
+        }
+        catch (IOException ex) {
+            ex.printStackTrace(System.err);
+        }
+    }
+
+    /**
+     * Sends a message object to the connected ClientSession.
+     *
+     * @param m Message object to be sent.
+     * @throws IOException If an error occurs when writing the message to the websocket channel.
+     */
     public void sendMessage(Message m) throws IOException {
         // TODO: encrypt object before writing
         ObjectOutputStream oos = new ObjectOutputStream(channel.getOutputStream());
         oos.writeObject(m);
     }
 
+    /**
+     * Blocks until a new Message object is received from the client.
+     *
+     * @return Message from the ClientSession.
+     * @throws IOException If any errors occur when getting the socket input stream.
+     */
     public Message getNextMessage() throws IOException {
         // TODO decrypt object before reading
         ObjectInputStream ois = new ObjectInputStream(channel.getInputStream());
