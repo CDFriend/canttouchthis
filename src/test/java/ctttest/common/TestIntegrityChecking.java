@@ -1,8 +1,9 @@
-package canttouchthis.common;
+package ctttest.common;
+
+import canttouchthis.common.IntegrityChecking;
 
 import java.security.MessageDigest;
 import junit.framework.*;
-import canttouchthis.common.IntegrityChecking;
 
 public class TestIntegrityChecking extends TestCase {
 
