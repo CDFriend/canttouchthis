@@ -2,6 +2,7 @@ package canttouchthis.server;
 
 import canttouchthis.common.Message;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -73,6 +74,19 @@ public class ServerSession {
         // TODO: encrypt object before writing
         ObjectOutputStream oos = new ObjectOutputStream(channel.getOutputStream());
         oos.writeObject(m);
+    }
+
+    public Message getNextMessage() throws IOException {
+        // TODO decrypt object before reading
+        ObjectInputStream ois = new ObjectInputStream(channel.getInputStream());
+
+        try {
+            // TODO: what if we get sent an object that's not a Message?
+            return (Message) ois.readObject();
+        }
+        catch (ClassNotFoundException ex) {
+            return null;
+        }
     }
 
 }
