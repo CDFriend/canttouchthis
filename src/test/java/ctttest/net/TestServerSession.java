@@ -1,5 +1,7 @@
 package ctttest.net;
 
+import ctttest.net.NetUtilityThreads.*;
+
 import canttouchthis.common.Message;
 import canttouchthis.server.ServerSession;
 
@@ -81,42 +83,6 @@ public class TestServerSession extends TestCase {
         assertEquals(m.reciever, recv.reciever);
         assertEquals(m.message, recv.message);
         assertTrue(m.timestamp.equals(recv.timestamp));
-    }
-
-    private class TryConnect extends Thread {
-        InetAddress addr;
-        int port;
-        boolean tryReadMessage;
-        Message message = null;
-
-        boolean success;
-
-        public TryConnect(InetAddress addr, int port, boolean tryReadMessage) {
-            this.addr = addr;
-            this.port = port;
-            this.tryReadMessage = tryReadMessage;
-        }
-
-        public void run() {
-            Socket s;
-            try {
-                Thread.sleep(3000);
-                s = new Socket(addr, port);
-
-                // try to get a message from the server
-                if (tryReadMessage) {
-                    ObjectInputStream ois = new ObjectInputStream(s.getInputStream());
-                    message = (Message) ois.readObject();
-                }
-
-                s.close();
-            }
-            catch (Exception ex) {
-                ex.printStackTrace(System.err);
-                success = false;
-            }
-            success = true;
-        }
     }
 
 }

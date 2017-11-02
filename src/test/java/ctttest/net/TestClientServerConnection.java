@@ -1,5 +1,7 @@
 package ctttest.net;
 
+import ctttest.net.NetUtilityThreads.*;
+
 import canttouchthis.common.Message;
 import canttouchthis.client.ClientSession;
 import canttouchthis.server.ServerSession;
@@ -10,49 +12,6 @@ import java.net.UnknownHostException;
 import junit.framework.*;
 
 public class TestClientServerConnection extends TestCase {
-
-    private class TryRecieveMessageClient extends Thread {
-        ClientSession c;
-        Message message = null;
-        boolean success = false;
-        public TryRecieveMessageClient(ClientSession c) {
-            this.c = c;
-        }
-
-        public void run() {
-            try {
-                Thread.sleep(3000);
-                c.connect();
-                message = c.getNextMessage();
-                success = true;
-            }
-            catch (Exception ex) {
-                ex.printStackTrace(System.err);
-            }
-            c.close();
-        }
-    }
-
-    private class TryRecieveMessageServer extends Thread {
-        ServerSession s;
-        Message message = null;
-        boolean success = false;
-        public TryRecieveMessageServer(ServerSession s) {
-            this.s = s;
-        }
-
-        public void run() {
-            s.waitForConnection();
-            try {
-                message = s.getNextMessage();
-                success = true;
-            }
-            catch (Exception ex) {
-                ex.printStackTrace(System.err);
-            }
-            s.close();
-        }
-    }
 
     public void testClientReceivesServerMessage() throws UnknownHostException {
         // SETUP

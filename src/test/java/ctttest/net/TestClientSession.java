@@ -1,5 +1,7 @@
 package ctttest.net;
 
+import ctttest.net.NetUtilityThreads.*;
+
 import canttouchthis.client.ClientSession;
 
 import java.io.IOException;
@@ -72,37 +74,6 @@ public class TestClientSession extends TestCase {
         assertEquals(m.reciever, recv.reciever);
         assertEquals(m.message, recv.message);
         assertTrue(m.timestamp.equals(recv.timestamp));
-    }
-
-    private class WaitForConnection extends Thread {
-        int port;
-        Message message;
-        boolean success = false;
-        boolean tryReadMessage;
-        public WaitForConnection(int port, boolean tryReadMessage) {
-            this.port = port;
-            this.tryReadMessage = tryReadMessage;
-        }
-
-        public void run() {
-            try {
-                ServerSocket s = new ServerSocket(port);
-                Socket sock = s.accept();
-
-                if (tryReadMessage) {
-                    ObjectInputStream ois = new ObjectInputStream(sock.getInputStream());
-                    message = (Message) ois.readObject();
-                }
-
-                s.close();
-            }
-            catch (Exception ex) {
-                ex.printStackTrace(System.err);
-                success = false;
-            }
-
-            success = true;
-        }
     }
 
 }
