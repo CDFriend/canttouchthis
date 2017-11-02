@@ -35,7 +35,7 @@ public class TestClientSession extends TestCase {
         // VERIFY
         boolean success = true;
         try {
-            server.join();
+            server.join(30000);
         }
         catch (InterruptedException ex) {
             success = false;
@@ -56,7 +56,7 @@ public class TestClientSession extends TestCase {
         try {
             sess.connect();
             sess.sendMessage(m);
-            server.join();
+            server.join(30000);
         }
         catch (IOException|InterruptedException ex) {
             success = false;

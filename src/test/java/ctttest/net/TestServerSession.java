@@ -37,7 +37,7 @@ public class TestServerSession extends TestCase {
         boolean success = session.waitForConnection();
 
         try {
-            conThread.join();
+            conThread.join(30000);
         }
         catch (InterruptedException ex) {
             assertTrue("Connection thread interrupted!", false);
@@ -67,7 +67,7 @@ public class TestServerSession extends TestCase {
         }
 
         try {
-            conThread.join();
+            conThread.join(30000);
         }
         catch (InterruptedException ex) {
             assertTrue("Connection thread interrupted!", false);
@@ -106,9 +106,8 @@ public class TestServerSession extends TestCase {
                     ObjectInputStream ois = new ObjectInputStream(s.getInputStream());
                     message = (Message) ois.readObject();
                 }
-                else {
-                    s.close();
-                }
+
+                s.close();
             }
             catch (IOException|ClassNotFoundException ex) {
                 success = false;
