@@ -4,6 +4,9 @@ import canttouchthis.common.Message;
 import canttouchthis.ui.ConversationController;
 import canttouchthis.ui.ConversationModel;
 import canttouchthis.ui.ConversationView;
+import canttouchthis.ui.LoginView;
+
+import javax.swing.*;
 
 class Main {
 
@@ -14,6 +17,14 @@ class Main {
     }
 
     public static void main(String[] args) {
+
+        LoginView loginView = new LoginView();
+
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                loginView.setVisible(true);
+            }
+        });
 
         // Start in LOGIN state
         ClientState appState = ClientState.LOGIN;
