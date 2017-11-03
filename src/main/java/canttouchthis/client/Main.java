@@ -7,20 +7,32 @@ import canttouchthis.ui.ConversationView;
 
 class Main {
 
+    private enum ClientState {
+        LOGIN,
+        CONNECT,
+        CHAT
+    }
+
     public static void main(String[] args) {
-        System.out.println("Hello Client!");
 
-        ConversationModel m = new ConversationModel();
+        // Start in LOGIN state
+        ClientState appState = ClientState.LOGIN;
 
-        ConversationView cv = new ConversationView(m);
-        cv.setVisible(true);
-        cv.updateConversation();
+        while (true) {
 
-        Message msg = new Message("blorp", "bleep", 1, "Mwyaah!");
-        ConversationController c = new ConversationController(cv, m);
-        c.addMessage(msg);
-        c.addMessage(msg);
-        c.addMessage(msg);
+            if (appState == ClientState.LOGIN) {
+
+            }
+
+            else if (appState == ClientState.CONNECT) {
+
+            }
+
+            else {
+
+            }
+
+        }
 
     }
 
