@@ -24,7 +24,7 @@ public class ConversationView extends JFrame {
     protected JButton sendButton;
 
     public ConversationView(ConversationModel model) {
-        super("canttouchthis");
+        super("canttouchthis v1.0");
 
         this.model = model;
 

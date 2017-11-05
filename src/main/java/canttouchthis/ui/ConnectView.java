@@ -7,8 +7,14 @@ import java.awt.*;
 
 public class ConnectView extends JFrame {
 
+    protected JTextField hostField;
+    protected JSpinner portField;
+    protected JCheckBox confBox;
+    protected JCheckBox integBox;
+    protected JButton connectButton;
+
     public ConnectView() {
-        super();
+        super("canttouchthis v1.0");
         initComponents();
     }
 
@@ -17,7 +23,7 @@ public class ConnectView extends JFrame {
         setLayout(new GridBagLayout());
         Container pane = getContentPane();
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        
+
         GridBagConstraints c = new GridBagConstraints();
 
         // "Connect to" label
@@ -38,7 +44,7 @@ public class ConnectView extends JFrame {
 
         c.gridx = 1;
         c.gridy = 1;
-        JTextField hostField = new JTextField(13);
+        hostField = new JTextField(13);
         pane.add(hostField, c);
 
         c.gridx = 2;
@@ -48,13 +54,13 @@ public class ConnectView extends JFrame {
 
         c.gridx = 3;
         c.gridy = 1;
-        JSpinner portNumField = new JSpinner();
+        portField = new JSpinner();
         SpinnerModel model = new SpinnerNumberModel(ServerSession.DEFAULT_PORT,
                                                     0,
-                                                    ServerSession.DEFAULT_PORT,
+                                                    ServerSession.DEFAULT_PORT + 10000,
                                                     1);
-        portNumField.setModel(model);
-        pane.add(portNumField, c);
+        portField.setModel(model);
+        pane.add(portField, c);
 
         // "Security Options" label
         c.gridx = 0;
@@ -68,12 +74,12 @@ public class ConnectView extends JFrame {
         // Security options boxes
         c.gridx = 0;
         c.gridy = 3;
-        JCheckBox confBox = new JCheckBox("Confidentiality (AES encryption)", true);
+        confBox = new JCheckBox("Confidentiality (AES encryption)", true);
         pane.add(confBox, c);
 
         c.gridx = 0;
         c.gridy = 4;
-        JCheckBox integBox = new JCheckBox("Integrity (SHA-256 Digests)", true);
+        integBox = new JCheckBox("Integrity (SHA-256 Digests)", true);
         pane.add(integBox, c);
 
         // Connect button
@@ -81,7 +87,7 @@ public class ConnectView extends JFrame {
         c.gridy = 5;
         c.gridwidth = 4;
         c.fill = GridBagConstraints.HORIZONTAL;
-        JButton connectButton = new JButton("Connect");
+        connectButton = new JButton("Connect");
         pane.add(connectButton, c);
 
         pack();

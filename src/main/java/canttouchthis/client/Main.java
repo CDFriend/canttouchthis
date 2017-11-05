@@ -1,11 +1,7 @@
 package canttouchthis.client;
 
 import canttouchthis.common.Message;
-import canttouchthis.ui.ConversationController;
-import canttouchthis.ui.ConversationModel;
-import canttouchthis.ui.ConversationView;
-import canttouchthis.ui.LoginView;
-import canttouchthis.ui.ConnectView;
+import canttouchthis.ui.*;
 
 import javax.swing.*;
 
@@ -20,12 +16,9 @@ class Main {
     public static void main(String[] args) {
 
         ConnectView connectView = new ConnectView();
+        ConnectController cc = new ConnectController(connectView);
 
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                connectView.setVisible(true);
-            }
-        });
+        cc.showView();
 
         // Start in LOGIN state
         ClientState appState = ClientState.LOGIN;

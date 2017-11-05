@@ -9,7 +9,7 @@ public class LoginView extends JFrame {
     private final int LOGINVIEW_HEIGHT = 100;
 
     public LoginView() {
-        super();
+        super("canttouchthis v1.0");
         initComponents();
     }
 
