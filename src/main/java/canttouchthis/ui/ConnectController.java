@@ -7,7 +7,7 @@ import javax.swing.*;
 public class ConnectController implements ActionListener {
 
     private ConnectView _view;
-    private IConnectHandler _connectHandler;
+    private IActionHandler _connectHandler;
 
     public ConnectController (ConnectView view) {
         this._view = view;
