@@ -5,6 +5,7 @@ import canttouchthis.ui.ConversationController;
 import canttouchthis.ui.ConversationModel;
 import canttouchthis.ui.ConversationView;
 import canttouchthis.ui.LoginView;
+import canttouchthis.ui.ConnectView;
 
 import javax.swing.*;
 
@@ -18,32 +19,16 @@ class Main {
 
     public static void main(String[] args) {
 
-        LoginView loginView = new LoginView();
+        ConnectView connectView = new ConnectView();
 
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
-                loginView.setVisible(true);
+                connectView.setVisible(true);
             }
         });
 
         // Start in LOGIN state
         ClientState appState = ClientState.LOGIN;
-
-        while (true) {
-
-            if (appState == ClientState.LOGIN) {
-
-            }
-
-            else if (appState == ClientState.CONNECT) {
-
-            }
-
-            else {
-
-            }
-
-        }
 
     }
 
