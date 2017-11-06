@@ -2,6 +2,7 @@ package canttouchthis.client;
 
 import canttouchthis.common.IChatSession;
 import canttouchthis.common.Message;
+import canttouchthis.common.KeyEstablishment;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -32,8 +33,27 @@ public class ClientSession implements IChatSession {
         this.addr = InetAddress.getByName(addr);
         this.port = port;
 
+        KeyEstablishment es = new KeyEstablishment();
+        Key privKey = es.getPrivateKey();
+        Key pubKey = es.getPublicKey();
+
+        //encode keys
+        String privByteStr = new String(privKey.getEncoded());
+        String pubByteStr = new String(pubKey.getEncoded());
+
+        System.out.println(privByteStr);
+        System.out.println(pubByteStr);
+
+        //for ()
+
         try {
             this.connection = new Socket(this.addr, this.port);
+
+
+            //wait for server to do these things
+
+            //KeyAgreement keyAgree = new KeyAgreement
+
         }
         catch (IOException ex) {
             return false;

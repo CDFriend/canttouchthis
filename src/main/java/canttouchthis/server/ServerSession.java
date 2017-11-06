@@ -63,9 +63,17 @@ public class ServerSession implements IChatSession {
 
         // Block until a TCP connection is established.
         Socket s;
+
+        //Get private and public keys for KeyAgreement
+        KeyEstablishment es = new KeyEstablishment();
+        Key privKey = es.getPrivateKey();
+        Key pubKey = es.getPublicKey();
+
         try {
             server = new ServerSocket(port);
             s = server.accept();
+
+            //KeyAgreement stuff - must send public key 
         }
         catch (IOException ex) {
             return false;
