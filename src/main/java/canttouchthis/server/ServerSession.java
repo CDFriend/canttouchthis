@@ -89,7 +89,7 @@ public class ServerSession implements IChatSession {
 
             //rebuild the public key from the opposite side
             Key clientPublicKey = KeyFactory.getInstance("RSA").generatePublic(new X509EncodedKeySpec(clientPubKeyByte));
-
+            System.out.println(String());
 
             //establish KeyAgreement
             KeyAgreement keyAgree = new KeyAgreement(privKey);

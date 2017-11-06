@@ -54,18 +54,22 @@ public class ClientSession implements IChatSession {
             OutputStream socketOutputStream = connection.getOutputStream();
             socketOutputStream.write(pubByte);
 
-
             //wait for server to send their public key byte[]
             InputStream serverInputStream = connection.getInputStream();
             byte[] serverPubKeyByte = new byte[1024];
             int q = serverInputStream.read(serverPubKeyByte);
 
             //rebuild the public key from the opposite side
-            Key publicKey = KeyFactory.getInstance("RSA").generatePublic(new X509EncodedKeySpec(serverPubKeyByte));
+            Key serverPublicKey = KeyFactory.getInstance("RSA").generatePublic(new X509EncodedKeySpec(serverPubKeyByte));
 
+            //establish KeyAgreement
+            KeyAgreement keyAgree = new KeyAgreement(privKey);
 
+            //creates a noneKey to use if we were doing this step multiple times. we are not.
+            Key noneKey = keyAgree.doPhase(serverPublicKey, true);
 
-            //KeyAgreement keyAgree = new KeyAgreement
+            //Create shared secret to use
+            Key sharedSecret = keyAgree.generateSecret("AES");
 
         }
         catch (IOException ex) {
