@@ -8,7 +8,6 @@ public class KeyEstablishment{
 
 	KeyPair key;
 
-
 	public KeyEstablishment(){
 		try{
 			KeyPairGenerator keyGen = KeyPairGenerator.getInstance("RSA");

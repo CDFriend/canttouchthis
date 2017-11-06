@@ -7,6 +7,8 @@ import canttouchthis.common.KeyEstablishment;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.OutputStream;
+import java.io.InputStream;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
@@ -39,19 +41,29 @@ public class ClientSession implements IChatSession {
         Key pubKey = es.getPublicKey();
 
         //encode keys
-        String privByteStr = new String(privKey.getEncoded());
-        String pubByteStr = new String(pubKey.getEncoded());
 
-        System.out.println(privByteStr);
-        System.out.println(pubByteStr);
+        //System.out.println(pubByteStr);
 
-        //for ()
+        byte[] pubByte = pubKey.getEncoded();
+        //String pubFormat = pubKey.getFormat();
+
+        //System.out.println(pubFormat);
 
         try {
             this.connection = new Socket(this.addr, this.port);
+            OutputStream socketOutputStream = connection.getOutputStream();
+            socketOutputStream.write(pubByte);
 
 
-            //wait for server to do these things
+            //wait for server to send their public key byte[]
+            InputStream serverInputStream = connection.getInputStream();
+            byte[] serverPubKeyByte = new byte[1024];
+            int q = serverInputStream.read(serverPubKeyByte);
+
+            //rebuild the public key from the opposite side
+            Key publicKey = KeyFactory.getInstance("RSA").generatePublic(new X509EncodedKeySpec(serverPubKeyByte));
+
+
 
             //KeyAgreement keyAgree = new KeyAgreement
 

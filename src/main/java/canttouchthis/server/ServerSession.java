@@ -7,6 +7,8 @@ import canttouchthis.common.KeyEstablishment;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.OutputStream;
+import java.io.InputStream;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -70,12 +72,34 @@ public class ServerSession implements IChatSession {
         KeyEstablishment es = new KeyEstablishment();
         Key privKey = es.getPrivateKey();
         Key pubKey = es.getPublicKey();
+        byte[] pubByte = pubKey.getEncoded();
 
         try {
             server = new ServerSocket(port);
             s = server.accept();
 
-            //KeyAgreement stuff - must send public key
+            //receive client pub key in form of byte[]
+            InputStream serverInputStream = s.getInputStream();
+            byte[] clientPubKeyByte = new byte[1024];
+            int q = serverInputStream.read(clientPubKeyByte);
+
+            //Send our own pub key byte[]
+            OutputStream socketOutputStream = s.getOutputStream();
+            socketOutputStream.write(pubByte);
+
+            //rebuild the public key from the opposite side
+            Key clientPublicKey = KeyFactory.getInstance("RSA").generatePublic(new X509EncodedKeySpec(clientPubKeyByte));
+
+
+            //establish KeyAgreement
+            KeyAgreement keyAgree = new KeyAgreement(privKey);
+
+            //creates a noneKey to use if we were doing this step multiple times. we are not.
+            Key noneKey = keyAgree.doPhase(clientPublicKey, true);
+
+            //Create shared secret to use
+            Key sharedSecret = keyAgree.generateSecret("AES");
+
         }
         catch (IOException ex) {
             return false;
