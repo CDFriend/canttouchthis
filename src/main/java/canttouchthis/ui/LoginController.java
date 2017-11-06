@@ -12,6 +12,7 @@ public class LoginController implements ActionListener {
 
     public LoginController(LoginView view) {
         this._view = view;
+        this._view.loginButton.addActionListener(this);
     }
 
     public void setLoginHandler(ILoginHandler handler) {

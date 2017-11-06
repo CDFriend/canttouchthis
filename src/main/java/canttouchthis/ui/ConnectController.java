@@ -14,6 +14,10 @@ public class ConnectController implements ActionListener {
         this._view.connectButton.addActionListener(this);
     }
 
+    public void setConnectHandler(IConnectHandler handler) {
+        this._connectHandler = handler;
+    }
+
     public void showView() {
         ConnectView view = this._view;
         SwingUtilities.invokeLater(new Runnable() {
