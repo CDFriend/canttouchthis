@@ -5,6 +5,10 @@ import javax.swing.*;
 
 public class LoginView extends JFrame {
 
+    protected JTextField uNameField;
+    protected JPasswordField passwordField;
+    protected JButton loginButton;
+
     private final int LOGINVIEW_WIDTH = 200;
     private final int LOGINVIEW_HEIGHT = 100;
 
@@ -40,7 +44,7 @@ public class LoginView extends JFrame {
         c.ipady = 2;
         c.weightx = 0.85;
         c.fill = GridBagConstraints.HORIZONTAL;
-        JTextField uNameField = new JTextField();
+        uNameField = new JTextField();
         pane.add(uNameField, c);
 
         // Password label + field
@@ -56,14 +60,14 @@ public class LoginView extends JFrame {
         c.gridy = 1;
         c.weightx = 0.85;
         c.fill = GridBagConstraints.HORIZONTAL;
-        JPasswordField passwordField = new JPasswordField();
+        passwordField = new JPasswordField();
         pane.add(passwordField, c);
 
         // Login button
         c.gridx = 0;
         c.gridy = 2;
         c.gridwidth = 2;
-        JButton loginButton = new JButton("Login");
+        loginButton = new JButton("Login");
         pane.add(loginButton, c);
 
         pack();
