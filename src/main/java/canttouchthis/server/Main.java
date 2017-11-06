@@ -1,5 +1,6 @@
 package canttouchthis.server;
 
+import canttouchthis.common.MessageMonitorThread;
 import canttouchthis.ui.*;
 
 class Main {
@@ -30,6 +31,10 @@ class Main {
                 session.waitForConnection();
                 waitDialog.setVisible(false);
                 conversationController.showView();
+
+                // once conversation starts, start message thread
+                MessageMonitorThread mm = new MessageMonitorThread(session, conversationController);
+                mm.start();
             }
         });
 

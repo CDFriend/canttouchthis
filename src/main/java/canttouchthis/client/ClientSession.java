@@ -1,5 +1,6 @@
 package canttouchthis.client;
 
+import canttouchthis.common.IChatSession;
 import canttouchthis.common.Message;
 
 import java.io.IOException;
@@ -12,7 +13,7 @@ import java.net.UnknownHostException;
 /**
  * Handles messaging and session establishment on the client side.
  */
-public class ClientSession {
+public class ClientSession implements IChatSession {
 
     private InetAddress addr;
     private int port;

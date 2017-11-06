@@ -1,6 +1,7 @@
 package canttouchthis.client;
 
 import canttouchthis.common.Message;
+import canttouchthis.common.MessageMonitorThread;
 import canttouchthis.ui.*;
 
 import java.net.UnknownHostException;
@@ -45,6 +46,11 @@ class Main {
                         // connection was successful
                         connectController.hideView();
                         conversationController.showView();
+
+                        // once conversation starts, start message monitor thread
+                        MessageMonitorThread mm = new MessageMonitorThread(session, conversationController);
+                        mm.start();
+
                         return null;
                     }
                     else {
