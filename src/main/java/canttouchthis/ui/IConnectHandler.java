@@ -1,6 +1,6 @@
 package canttouchthis.ui;
 
-public interface IActionHandler {
+public interface IConnectHandler {
 
     /**
      * Attempt to do something which may throw an error, and return a String error
@@ -8,6 +8,6 @@ public interface IActionHandler {
      *
      * @return String null if the connection was accepted or an error message.
      */
-    public String tryHandleAction();
+    public String tryHandleConnect(String host, int port, boolean checkInt, boolean useConf);
 
 }

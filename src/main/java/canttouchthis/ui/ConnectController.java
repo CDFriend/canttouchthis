@@ -7,7 +7,7 @@ import javax.swing.*;
 public class ConnectController implements ActionListener {
 
     private ConnectView _view;
-    private IActionHandler _connectHandler;
+    private IConnectHandler _connectHandler;
 
     public ConnectController (ConnectView view) {
         this._view = view;
@@ -36,8 +36,19 @@ public class ConnectController implements ActionListener {
 
     public void actionPerformed(ActionEvent e) {
 
-        if (e.getSource() == this._view.connectButton) {
-            System.out.println("Connect clicked!");
+        if (e.getSource() == this._view.connectButton && this._connectHandler != null) {
+
+            String host = this._view.hostField.getText();
+            int port = (int) this._view.portField.getValue();
+            boolean useConf = this._view.confBox.isSelected();
+            boolean checkInt = this._view.integBox.isSelected();
+
+            String err = this._connectHandler.tryHandleConnect(host, port, checkInt, useConf);
+
+            if (err != null) {
+                JOptionPane.showMessageDialog(this._view, "Connect failed: " + err);
+            }
+
         }
 
     }
