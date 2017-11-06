@@ -12,4 +12,12 @@ public interface IChatSession {
      */
     public Message getNextMessage() throws IOException;
 
+    /**
+     * Sends a Message object to the server.
+     *
+     * @param m Message to be sent.
+     * @throws IOException If an error is encountered sending over the websocket.
+     */
+    public void sendMessage(Message m) throws IOException;
+
 }

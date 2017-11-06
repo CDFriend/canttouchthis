@@ -70,6 +70,8 @@ public class ConversationController implements ActionListener {
             Message m = new Message("Alice", "Bob", System.currentTimeMillis(),
                     _view.sendField.getText());
 
+            this.addMessage(m);
+
             this.sendHandler.onMessageSend(m);
 
         }
