@@ -19,23 +19,18 @@ public class ClientSession {
     private Socket connection;
 
     /**
-     * Creates a client session for the given adress and port.
+     * Attempts to connect to the socket server on a given address and port.
      *
      * @param addr IP address of the ServerSession.
      * @param port Port the server is running on.
      * @throws UnknownHostException If the host address cannot be found.
-     */
-    public ClientSession(String addr, int port) throws UnknownHostException {
-        this.addr = InetAddress.getByName(addr);
-        this.port = port;
-    }
-
-    /**
-     * Attempts to connect to the socket server.
      *
      * @return Whether or not the connection was successful.
      */
-    public boolean connect() {
+    public boolean connect(String addr, int port) throws UnknownHostException {
+        this.addr = InetAddress.getByName(addr);
+        this.port = port;
+
         try {
             this.connection = new Socket(this.addr, this.port);
         }

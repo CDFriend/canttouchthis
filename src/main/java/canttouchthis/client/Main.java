@@ -3,9 +3,13 @@ package canttouchthis.client;
 import canttouchthis.common.Message;
 import canttouchthis.ui.*;
 
+import java.net.UnknownHostException;
+
 class Main {
 
     public static void main(String[] args) {
+
+        ClientSession session = new ClientSession();
 
         // Setup login view
         LoginController loginController = new LoginController(new LoginView());
@@ -32,9 +36,26 @@ class Main {
         connectController.setConnectHandler(new IConnectHandler() {
             @Override
             public String tryHandleConnect(String host, int port, boolean checkInt, boolean useConf) {
-                connectController.hideView();
-                conversationController.showView();
-                return null;
+
+                // TODO: sanitize URLs
+
+                // TODO: establish keys and encrypt messages. Beary insecure!
+                try {
+                    if (session.connect(host, port)) {
+                        // connection was successful
+                        connectController.hideView();
+                        conversationController.showView();
+                        return null;
+                    }
+                    else {
+                        // connection was unsuccessful
+                        return "Error connecting to host " + host + ":" + port;
+                    }
+                }
+                catch (UnknownHostException ex) {
+                    return "Could not find host " + host + ":" + port;
+                }
+
             }
         });
 
