@@ -9,6 +9,8 @@ Server test credentials: admin/nimda
 Client test credentials: user/resu
 """
 
+import base64
+import os
 import sqlite3
 import hashlib
 
@@ -19,6 +21,10 @@ TEST_CREDENTIALS = [
 
 
 def main():
+    # remove an old auth db if present
+    if os.path.exists("auth_db.sqlite"):
+        os.remove("auth_db.sqlite")
+
     # create new sqlite database
     con = sqlite3.connect("auth_db.sqlite")
     cur = con.cursor()
@@ -30,7 +36,7 @@ def main():
     """)
 
     for uname, pwd in TEST_CREDENTIALS:
-        pwd_digest = hashlib.sha256(pwd).hexdigest()
+        pwd_digest = base64.b64encode(hashlib.sha256(pwd).digest())
         print "Adding row %s, %s" % (uname, pwd_digest)
 
         cur.execute("INSERT INTO data_users VALUES (?, ?);", (uname, pwd_digest))
