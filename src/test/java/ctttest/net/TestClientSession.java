@@ -5,6 +5,7 @@ import ctttest.net.NetUtilityThreads.*;
 import canttouchthis.client.ClientSession;
 
 import java.io.IOException;
+import java.net.UnknownHostException;
 
 import canttouchthis.common.Message;
 import junit.framework.*;
@@ -16,9 +17,12 @@ public class TestClientSession extends TestCase {
 
     ClientSession sess;
 
+    private final String SERVER_ADDR = "127.0.0.1";
+    private final int SERVER_PORT = 50000;
+
     public void setUp() throws Exception {
         super.setUp();
-        sess = new ClientSession("127.0.0.1", 50000);
+        sess = new ClientSession();
     }
 
     public void tearDown() throws Exception {
@@ -38,10 +42,10 @@ public class TestClientSession extends TestCase {
         boolean success = true;
         try {
             Thread.sleep(3000);
-            sess.connect();
+            sess.connect(SERVER_ADDR, SERVER_PORT);
             server.join();
         }
-        catch (InterruptedException ex) {
+        catch (InterruptedException|UnknownHostException ex) {
             success = false;
         }
 
@@ -63,7 +67,7 @@ public class TestClientSession extends TestCase {
         boolean success = true;
         try {
             Thread.sleep(3000);
-            sess.connect();
+            sess.connect(SERVER_ADDR, SERVER_PORT);
             sess.sendMessage(m);
             server.join();
         }
