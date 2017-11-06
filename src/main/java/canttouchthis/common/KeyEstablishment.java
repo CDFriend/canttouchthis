@@ -1,14 +1,24 @@
+package canttouchthis.common;
+
 import java.security.*;
 import javax.crypto.*;
+
+
 public class KeyEstablishment{
 
 	KeyPair key;
 
 
 	public KeyEstablishment(){
-		KeyPairGenerator keyGen = KeyPairGenerator.getInstance("RSA");
-		keyGen.initialize(1024);
-		key = keyGen.generateKeyPair();
+		try{
+			KeyPairGenerator keyGen = KeyPairGenerator.getInstance("RSA");
+			keyGen.initialize(1024);
+			key = keyGen.generateKeyPair();
+		}
+		catch (NoSuchAlgorithmException e){
+			System.out.println("KeyEstablishment failed. Abort.");
+			System.exit(-1);
+		}
 	}
 
 

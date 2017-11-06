@@ -2,6 +2,7 @@ package canttouchthis.server;
 
 import canttouchthis.common.Message;
 import canttouchthis.common.IChatSession;
+import canttouchthis.common.KeyEstablishment;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -10,6 +11,7 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.security.*;
 
 /**
  * Handles sending and recieving Message objects and key exchange on the
@@ -73,7 +75,7 @@ public class ServerSession implements IChatSession {
             server = new ServerSocket(port);
             s = server.accept();
 
-            //KeyAgreement stuff - must send public key 
+            //KeyAgreement stuff - must send public key
         }
         catch (IOException ex) {
             return false;
