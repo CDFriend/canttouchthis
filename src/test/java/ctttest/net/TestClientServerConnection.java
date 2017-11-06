@@ -24,7 +24,7 @@ public class TestClientServerConnection extends TestCase {
     public void testClientReceivesServerMessage() throws UnknownHostException {
         // SETUP
         ServerSession s = new ServerSession();
-        ClientSession c = new ClientSession("127.0.0.1", ServerSession.DEFAULT_PORT);
+        ClientSession c = new ClientSession();
         Message m = new Message("Alice", "Bob", 0, "This is a test!!!");
 
         // EXEC
@@ -58,7 +58,7 @@ public class TestClientServerConnection extends TestCase {
     public void testServerRecievesClientMessage() throws UnknownHostException {
         // SETUP
         ServerSession s = new ServerSession();
-        ClientSession c = new ClientSession("127.0.0.1", ServerSession.DEFAULT_PORT);
+        ClientSession c = new ClientSession();
         Message m = new Message("Alice", "Bob", 0, "This is a test!!!");
 
         // EXEC
@@ -66,7 +66,7 @@ public class TestClientServerConnection extends TestCase {
         try {
             sThread.start();
             Thread.sleep(3000);
-            c.connect();
+            c.connect("127.0.0.1", 50000);
             c.sendMessage(m);
             sThread.join();
         }

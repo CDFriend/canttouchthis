@@ -1,17 +1,21 @@
 package canttouchthis.server;
 
 import canttouchthis.common.Message;
+import canttouchthis.common.IChatSession;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.UnknownHostException;
 
 /**
  * Handles sending and recieving Message objects and key exchange on the
  * server side.
  */
-public class ServerSession {
+public class ServerSession implements IChatSession {
 
     public static final int DEFAULT_PORT = 50000;
 
@@ -33,6 +37,15 @@ public class ServerSession {
      */
     public ServerSession(int port) {
         this.port = port;
+    }
+
+    public String getAddress() {
+        try {
+            return InetAddress.getLocalHost().getHostName();
+        }
+        catch (UnknownHostException ex) {
+            return "127.0.0.1";
+        }
     }
 
     /**

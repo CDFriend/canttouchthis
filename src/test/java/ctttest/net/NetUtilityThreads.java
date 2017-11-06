@@ -14,6 +14,9 @@ import java.net.Socket;
  */
 public class NetUtilityThreads {
 
+    private static final String SERVER_ADDR = "127.0.0.1";
+    private static final int SERVER_PORT = 50000;
+
     /**
      * Attempts to connect a ClientSession to a server (after a brief delay), then
      * waits for a message to arrive from the server..
@@ -30,7 +33,7 @@ public class NetUtilityThreads {
         public void run() {
             try {
                 Thread.sleep(3000);
-                c.connect();
+                c.connect(SERVER_ADDR, SERVER_PORT);
                 message = c.getNextMessage();
                 success = true;
             }
