@@ -5,6 +5,9 @@ import canttouchthis.server.ServerSession;
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * Window for specifying options before connecting to a server (client-side).
+ */
 public class ConnectView extends JFrame {
 
     protected JTextField hostField;
@@ -13,6 +16,9 @@ public class ConnectView extends JFrame {
     protected JCheckBox integBox;
     protected JButton connectButton;
 
+    /**
+     * Create and populate a new ConnectView.
+     */
     public ConnectView() {
         super("canttouchthis v1.0");
         initComponents();

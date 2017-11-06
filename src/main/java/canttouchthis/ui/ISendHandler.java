@@ -3,7 +3,7 @@ package canttouchthis.ui;
 import canttouchthis.common.Message;
 
 /**
- * Implement this to handle a new message being sent from the UI.
+ * Implement this to handle a new message being sent from a ConversationView.
  */
 public interface ISendHandler {
 

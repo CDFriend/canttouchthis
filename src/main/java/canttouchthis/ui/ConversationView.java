@@ -23,6 +23,11 @@ public class ConversationView extends JFrame {
     protected JTextField sendField;
     protected JButton sendButton;
 
+    /**
+     * Create a new ConversationView window from a given model.
+     *
+     * @param model Structure containing message data.
+     */
     public ConversationView(ConversationModel model) {
         super("canttouchthis v1.0");
 
@@ -81,6 +86,9 @@ public class ConversationView extends JFrame {
         pack();
     }
 
+    /**
+     * Update all messages in the view from the model.
+     */
     public void updateConversation() {
         // re-render all messages
         chatPane.setText("");
@@ -90,6 +98,10 @@ public class ConversationView extends JFrame {
         }
     }
 
+    /**
+     * Render a Message object to the view.
+     * @param m Message to be rendered.
+     */
     private void renderMessage(Message m) {
         String rendered = String.format("[%s] %s: %s\n", date_format.format(m.timestamp),
                 m.sender, m.message);

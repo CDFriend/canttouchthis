@@ -4,21 +4,39 @@ import javax.swing.*;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
+/**
+ * Controller for a LoginView window.
+ *
+ * Asynchronously handles updating the UI using the swing event queue.
+ */
 public class LoginController implements ActionListener {
 
     private LoginView _view;
 
     private ILoginHandler _loginHandler;
 
+    /**
+     * Create a new controller for a given LoginView.
+     * @param view LoginView to be controlled.
+     */
     public LoginController(LoginView view) {
         this._view = view;
         this._view.loginButton.addActionListener(this);
     }
 
+    /**
+     * Sets an ILoginHandler to handle login attempts. Handler should return an error
+     * message if the login fails and null if the login succeeds.
+     *
+     * @param handler ILoginHandler to deal with Login attempts.
+     */
     public void setLoginHandler(ILoginHandler handler) {
         this._loginHandler = handler;
     }
 
+    /**
+     * Issues an event to show the LoginView.
+     */
     public void showView() {
         LoginView view = this._view;
         SwingUtilities.invokeLater(new Runnable() {
@@ -29,6 +47,9 @@ public class LoginController implements ActionListener {
         });
     }
 
+    /**
+     * Issues an event to hide the LoginView.
+     */
     public void hideView() {
         LoginView view = this._view;
         SwingUtilities.invokeLater(new Runnable() {
@@ -39,6 +60,11 @@ public class LoginController implements ActionListener {
         });
     }
 
+    /**
+     * Delegates send events to the LoginHandler, if one is present.
+     *
+     * @param e Swing ButtonPress event.
+     */
     public void actionPerformed(ActionEvent e) {
 
         if (e.getSource() == this._view.loginButton && this._loginHandler != null) {

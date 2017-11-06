@@ -1,5 +1,8 @@
 package canttouchthis.ui;
 
+/**
+ * Interface for handling Connect events from a ConnectView.
+ */
 public interface IConnectHandler {
 
     /**

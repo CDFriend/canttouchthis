@@ -1,5 +1,8 @@
 package canttouchthis.ui;
 
+/**
+ * Interface for handling Login events from a LoginView.
+ */
 public interface ILoginHandler {
 
     /**
