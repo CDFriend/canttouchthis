@@ -5,6 +5,7 @@ repositories {
 }
 
 dependencies {
+    compile 'org.xerial:sqlite-jdbc:3.20.1'
     testCompile 'junit:junit:4.12'
 }
 
@@ -22,6 +23,12 @@ sourceSets {
         }
     }
 }
+
+task makeAuthDB(type:Exec) {
+    commandLine 'python', 'generate_auth_db.py'
+}
+
+tasks.compileJava.dependsOn(makeAuthDB)
 
 // Test options
 test {
