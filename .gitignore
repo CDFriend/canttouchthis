@@ -8,3 +8,7 @@
 # Gradle files
 .gradle
 build/
+
+# Auth database and dist files
+*.sqlite
+dist/
