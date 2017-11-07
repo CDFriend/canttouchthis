@@ -30,6 +30,8 @@ public class ConnectView extends JFrame {
         Container pane = getContentPane();
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
+        getRootPane().setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
+
         GridBagConstraints c = new GridBagConstraints();
 
         // "Connect to" label

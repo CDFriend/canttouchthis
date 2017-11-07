@@ -26,6 +26,8 @@ public class LoginView extends JFrame {
         setResizable(false);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
+        getRootPane().setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
+
         Container pane = getContentPane();
         pane.setLayout(new GridBagLayout());
 

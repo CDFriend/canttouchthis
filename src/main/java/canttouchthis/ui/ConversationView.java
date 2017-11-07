@@ -33,6 +33,8 @@ public class ConversationView extends JFrame {
 
         this.model = model;
 
+        getRootPane().setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
+
         setResizable(false);
         setPreferredSize(new Dimension(FRAME_WIDTH, FRAME_HEIGHT));
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
