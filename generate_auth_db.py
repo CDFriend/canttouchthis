@@ -36,8 +36,8 @@ def main():
     """)
 
     for uname, pwd, type in TEST_CREDENTIALS:
-        pwd_digest = base64.b64encode(hashlib.sha256(pwd).digest())
-        print "Adding row %s, %s" % (uname, pwd_digest)
+        pwd_digest = base64.b64encode(hashlib.sha256(str.encode(pwd)).digest())
+        print("Adding row %s, %s" % (uname, pwd_digest))
 
         cur.execute("INSERT INTO data_users VALUES (?, ?, ?);", (uname, pwd_digest, type))
 
