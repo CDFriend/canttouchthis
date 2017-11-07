@@ -15,8 +15,8 @@ import sqlite3
 import hashlib
 
 TEST_CREDENTIALS = [
-    ["admin", "nimda"],
-    ["user", "resu"]
+    ["admin", "nimda", "SERVER"],
+    ["user", "resu", "CLIENT"]
 ]
 
 
@@ -32,14 +32,14 @@ def main():
     # create table for user data
     cur.execute("""
         CREATE TABLE data_users 
-            (uname STRING NOT NULL, pwdHash STRING NOT NULL);
+            (uname STRING NOT NULL, pwdHash STRING NOT NULL, type STRING NOT NULL);
     """)
 
-    for uname, pwd in TEST_CREDENTIALS:
+    for uname, pwd, type in TEST_CREDENTIALS:
         pwd_digest = base64.b64encode(hashlib.sha256(pwd).digest())
         print "Adding row %s, %s" % (uname, pwd_digest)
 
-        cur.execute("INSERT INTO data_users VALUES (?, ?);", (uname, pwd_digest))
+        cur.execute("INSERT INTO data_users VALUES (?, ?, ?);", (uname, pwd_digest, type))
 
     con.commit()
     con.close()
