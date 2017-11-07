@@ -5,6 +5,8 @@ import javax.swing.*;
 
 public class LoginView extends JFrame {
 
+    private static final String CAPTION_MESSAGE = "A secure instant messaging system.";
+
     protected JTextField uNameField;
     protected JPasswordField passwordField;
     protected JButton loginButton;
@@ -51,9 +53,17 @@ public class LoginView extends JFrame {
         makeHeaderStyle(headerLabel);
         pane.add(headerLabel, c);
 
+        // caption text
+        c.gridy = 2;
+        c.ipady = 6;
+        JLabel captionLabel = new JLabel(CAPTION_MESSAGE, JLabel.CENTER);
+        Font f = captionLabel.getFont();
+        captionLabel.setFont(f.deriveFont(f.getStyle() | Font.BOLD));
+        pane.add(captionLabel, c);
+
         // Username label and field
         c.gridx = 0;
-        c.gridy = 2;
+        c.gridy = 3;
         c.ipadx = 10;
         c.ipady = 2;
         c.weightx = 0.15;
@@ -64,7 +74,7 @@ public class LoginView extends JFrame {
         pane.add(uNameLabel, c);
 
         c.gridx = 1;
-        c.gridy = 2;
+        c.gridy = 3;
         c.ipadx = 2;
         c.ipady = 2;
         c.weightx = 0.85;
@@ -74,7 +84,7 @@ public class LoginView extends JFrame {
 
         // Password label + field
         c.gridx = 0;
-        c.gridy = 3;
+        c.gridy = 4;
         c.weightx = 0.15;
         c.ipadx = 10;
         c.anchor = GridBagConstraints.WEST;
@@ -83,7 +93,7 @@ public class LoginView extends JFrame {
         pane.add(passwordLabel, c);
 
         c.gridx = 1;
-        c.gridy = 3;
+        c.gridy = 4;
         c.weightx = 0.85;
         c.fill = GridBagConstraints.HORIZONTAL;
         passwordField = new JPasswordField();
@@ -91,7 +101,7 @@ public class LoginView extends JFrame {
 
         // Login button
         c.gridx = 0;
-        c.gridy = 4;
+        c.gridy = 5;
         c.gridwidth = 2;
         loginButton = new JButton("Login");
         pane.add(loginButton, c);
