@@ -17,20 +17,14 @@ public class TestCryptoServices extends TestCase {
         keyGen.init(128);
         Key key = keyGen.generateKey();
 
-        byte[] byteMessage = message.getBytes();
-
         /*
          * Pass message to CryptoServices, 
          * and then return its respective ciphertext back to it as well.
          */
         CryptoServices cs = new CryptoServices();
-        byte[] ciphertext = cs.encryptSymmetric(byteMessage, key);
-        byte[] newPlaintext = cs.decryptSymmetric(ciphertext, key);
-        
-        /*
-         * Verify original message and decrypted plaintext are the same.
-         */
-        String plaintext = new String(newPlaintext);
-        assertEquals(message, plaintext);
+        byte[] ciphertext = cs.encryptSymmetric(message, key);
+        String newPlainText = cs.decryptSymmetric(ciphertext, key);
+
+        assertEquals(message, newPlainText);
     }
 }
