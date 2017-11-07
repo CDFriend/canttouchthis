@@ -14,6 +14,12 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.security.*;
+import java.security.spec.X509EncodedKeySpec;
+import javax.crypto.KeyAgreement;
+import javax.crypto.KeyAgreementSpi;
+
+//Exceptions
+import java.security.spec.InvalidKeySpecException;
 
 /**
  * Handles sending and recieving Message objects and key exchange on the
@@ -80,7 +86,7 @@ public class ServerSession implements IChatSession {
 
             //receive client pub key in form of byte[]
             InputStream serverInputStream = s.getInputStream();
-            byte[] clientPubKeyByte = new byte[1024];
+            byte[] clientPubKeyByte = new byte[2048];
             int q = serverInputStream.read(clientPubKeyByte);
 
             //Send our own pub key byte[]
@@ -89,10 +95,11 @@ public class ServerSession implements IChatSession {
 
             //rebuild the public key from the opposite side
             Key clientPublicKey = KeyFactory.getInstance("RSA").generatePublic(new X509EncodedKeySpec(clientPubKeyByte));
-            System.out.println(String());
+            //System.out.println(String(clientPubKeyByte));
 
             //establish KeyAgreement
-            KeyAgreement keyAgree = new KeyAgreement(privKey);
+            KeyAgreement keyAgree = KeyAgreement.getInstance("AES");
+            keyAgree.init(privKey);
 
             //creates a noneKey to use if we were doing this step multiple times. we are not.
             Key noneKey = keyAgree.doPhase(clientPublicKey, true);
@@ -103,6 +110,15 @@ public class ServerSession implements IChatSession {
         }
         catch (IOException ex) {
             return false;
+        }
+        catch (NoSuchAlgorithmException ex1) {
+          return false;
+        }
+        catch (InvalidKeySpecException ex2) {
+          return false;
+        }
+        catch (InvalidKeyException ex3) {
+          return false;
         }
 
         //TODO: check authentication and perform key exchange

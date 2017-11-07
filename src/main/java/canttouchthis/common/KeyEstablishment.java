@@ -11,7 +11,7 @@ public class KeyEstablishment{
 	public KeyEstablishment(){
 		try{
 			KeyPairGenerator keyGen = KeyPairGenerator.getInstance("RSA");
-			keyGen.initialize(1024);
+			keyGen.initialize(2048);
 			key = keyGen.generateKeyPair();
 		}
 		catch (NoSuchAlgorithmException e){

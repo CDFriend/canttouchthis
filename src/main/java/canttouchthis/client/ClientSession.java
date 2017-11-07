@@ -13,6 +13,13 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.security.*;
+import java.security.spec.X509EncodedKeySpec;
+import javax.crypto.KeyAgreement;
+import javax.crypto.KeyAgreementSpi;
+
+//Exceptions
+import java.security.spec.InvalidKeySpecException;
+
 
 /**
  * Handles messaging and session establishment on the client side.
@@ -56,14 +63,15 @@ public class ClientSession implements IChatSession {
 
             //wait for server to send their public key byte[]
             InputStream serverInputStream = connection.getInputStream();
-            byte[] serverPubKeyByte = new byte[1024];
+            byte[] serverPubKeyByte = new byte[2048];
             int q = serverInputStream.read(serverPubKeyByte);
 
             //rebuild the public key from the opposite side
             Key serverPublicKey = KeyFactory.getInstance("RSA").generatePublic(new X509EncodedKeySpec(serverPubKeyByte));
 
             //establish KeyAgreement
-            KeyAgreement keyAgree = new KeyAgreement(privKey);
+            KeyAgreement keyAgree = KeyAgreement.getInstance("AES");
+            keyAgree.init(privKey);
 
             //creates a noneKey to use if we were doing this step multiple times. we are not.
             Key noneKey = keyAgree.doPhase(serverPublicKey, true);
@@ -75,6 +83,16 @@ public class ClientSession implements IChatSession {
         catch (IOException ex) {
             return false;
         }
+        catch (NoSuchAlgorithmException ex1) {
+          return false;
+        }
+        catch (InvalidKeySpecException ex2) {
+          return false;
+        }
+        catch (InvalidKeyException ex3) {
+          return false;
+        }
+
         return true;
     }
 
