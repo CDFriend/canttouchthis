@@ -9,8 +9,8 @@ import junit.framework.*;
 
 public class TestCryptoServices extends TestCase {
 
-    public void TestEncryptDecrypt() throws Exception {
-        String message = new String("Hi there! This is a test message.");
+    public void testEncryptDecrypt() throws Exception {
+        String message = "Hi there! This is a test message.";
 
         //Generate random key for symmetric crypto
         KeyGenerator keyGen = KeyGenerator.getInstance("AES");
