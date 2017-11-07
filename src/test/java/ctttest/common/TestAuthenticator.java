@@ -18,7 +18,7 @@ public class TestAuthenticator extends TestCase {
         final String ADMIN_PWD = "nimda";
 
         try {
-            assertTrue(auth.checkAuth(ADMIN_USER, ADMIN_PWD));
+            assertTrue(auth.checkAuth(ADMIN_USER, ADMIN_PWD, Authenticator.UserType.USERTYPE_SERVER));
         }
         catch (java.sql.SQLException ex) {
             ex.printStackTrace();

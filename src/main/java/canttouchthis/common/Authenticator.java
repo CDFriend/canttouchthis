@@ -8,6 +8,11 @@ import java.sql.*;
  */
 public class Authenticator {
 
+    public enum UserType {
+        USERTYPE_CLIENT,
+        USERTYPE_SERVER
+    }
+
     private Connection _conn;
 
     public Authenticator(String dbpath) throws SQLException {
@@ -15,14 +20,16 @@ public class Authenticator {
         _conn = DriverManager.getConnection(url);
     }
 
-    public boolean checkAuth(String username, String password) throws SQLException {
+    public boolean checkAuth(String username, String password, UserType type) throws SQLException {
 
-        String query = "SELECT pwdHash FROM data_users WHERE uname=?";
+        String typeString = type==UserType.USERTYPE_SERVER ? "SERVER" : "CLIENT";
+        String query = "SELECT pwdHash FROM data_users WHERE uname=? AND TYPE=?";
 
         PreparedStatement stmt = _conn.prepareStatement(query,
                                                         ResultSet.TYPE_FORWARD_ONLY,
                                                         ResultSet.CONCUR_READ_ONLY);
         stmt.setString(1, username);
+        stmt.setString(2, typeString);
 
         ResultSet s = stmt.executeQuery();
         if (s.next()) {
@@ -34,7 +41,7 @@ public class Authenticator {
 
         }
         else {
-            // no rows in result set. User is not authenticated.
+            // no rows in result set. User does not exist.
             return false;
         }
 
