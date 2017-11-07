@@ -19,7 +19,7 @@ public class ConversationView extends JFrame {
 
     private final SimpleDateFormat date_format = new SimpleDateFormat("HH:mm:ss");
 
-    protected JTextPane chatPane;
+    protected JTextArea chatPane;
     protected JTextField sendField;
     protected JButton sendButton;
 
@@ -46,7 +46,7 @@ public class ConversationView extends JFrame {
         c.insets = new Insets(COMP_INSETS, COMP_INSETS, COMP_INSETS, COMP_INSETS);
 
         // chat window
-        chatPane = new JTextPane();
+        chatPane = new JTextArea();
         JScrollPane chatScroll = new JScrollPane(chatPane);
 
         c.gridx = 0;
@@ -107,7 +107,8 @@ public class ConversationView extends JFrame {
                 m.sender, m.message);
 
         // TODO: do this more efficiently and add styling
-        chatPane.setText(chatPane.getText() + rendered);
+        chatPane.append(rendered);
+        chatPane.setCaretPosition(chatPane.getDocument().getLength());
     }
 
 }
