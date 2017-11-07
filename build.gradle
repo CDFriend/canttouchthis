@@ -48,3 +48,35 @@ task run_client(type:JavaExec) {
     main = 'canttouchthis.client.Main'
     classpath = sourceSets.main.runtimeClasspath
 }
+
+// Generate JARs
+task server_jar(type:Jar) {
+    from (sourceSets.main.output) {
+        include "**"
+        archiveName "canttouchthis-server-1.0.jar"
+    }
+
+    manifest {
+        attributes "Main-Class" : "canttouchthis.server.Main"
+    }
+}
+
+task client_jar(type:Jar) {
+    from (sourceSets.main.output) {
+        include "**"
+        archiveName "canttouchthis-client-1.0.jar"
+    }
+
+    manifest {
+        attributes "Main-Class" : "canttouchthis.client.Main"
+    }
+}
+
+task make_dist(type: Copy, dependsOn: [server_jar, client_jar]) {
+    from ("./") {
+        include "*.sqlite"
+    }
+
+    from "build/libs/"
+    into dist_folder
+}
