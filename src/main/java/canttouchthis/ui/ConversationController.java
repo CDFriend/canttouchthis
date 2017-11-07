@@ -2,7 +2,7 @@ package canttouchthis.ui;
 
 import canttouchthis.common.Message;
 
-import javax.swing.SwingUtilities;
+import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyListener;
@@ -83,6 +83,11 @@ public class ConversationController implements ActionListener, KeyListener {
                 view.setVisible(false);
             }
         });
+    }
+
+    public void showDisconnect() {
+        JOptionPane.showMessageDialog(this._view,"Other user disconnected!");
+        System.exit(0);
     }
 
     /**

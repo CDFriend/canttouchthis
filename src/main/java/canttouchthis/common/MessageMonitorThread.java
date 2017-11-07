@@ -4,6 +4,7 @@ import canttouchthis.ui.ConversationController;
 import canttouchthis.ui.ISendHandler;
 
 import java.io.IOException;
+import java.io.EOFException;
 
 public class MessageMonitorThread extends Thread {
 
@@ -38,6 +39,9 @@ public class MessageMonitorThread extends Thread {
             try {
                 Message m = this._session.getNextMessage();
                 this._ui.addMessage(m);
+            }
+            catch (EOFException ex) {
+                this._ui.showDisconnect();
             }
             catch (IOException ex) {
                 ex.printStackTrace(System.err);
