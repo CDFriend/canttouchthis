@@ -99,8 +99,11 @@ public class ConversationController implements ActionListener {
             Message m = new Message("Alice", "Bob", System.currentTimeMillis(),
                     _view.sendField.getText());
 
-            this.addMessage(m);
+            // clear message field
+            this._view.sendField.setText("");
 
+            // add message to UI and pass to handler
+            this.addMessage(m);
             this.sendHandler.onMessageSend(m);
 
         }
