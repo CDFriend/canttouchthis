@@ -36,11 +36,13 @@ public class CryptoServices {
      * @param key Key passed to method to encrypt under.
      * @throws Exception For all possible exceptions (i.e. invalid key, bad padding, etc.)
      */
-    public byte[] encryptSymmetric(byte[] plaintext, Key key) throws Exception {
+    public byte[] encryptSymmetric(String plaintext, Key key) throws Exception {
+        byte ptBytes[] = plaintext.getBytes();
+
         Cipher c = Cipher.getInstance("AES/CBC/PKCS5Padding");
         c.init(Cipher.ENCRYPT_MODE, key, ivspec);
-        byte[] ciphertext = new byte[c.getOutputSize(plaintext.length)];
-        c.doFinal(plaintext, 0, plaintext.length, ciphertext);
+        byte[] ciphertext = new byte[c.getOutputSize(ptBytes.length)];
+        c.doFinal(ptBytes, 0, ptBytes.length, ciphertext);
 
         return ciphertext;
     }
@@ -52,13 +54,18 @@ public class CryptoServices {
      * @param key Key passed to method to encrypt under.
      * @throws Exception For all possible exceptions (i.e. invalid key, bad padding, etc.)
      */
-    public byte[] decryptSymmetric(byte[] ciphertext, Key key) throws Exception {
+    public String decryptSymmetric(byte[] ciphertext, Key key) throws Exception {
         Cipher c = Cipher.getInstance("AES/CBC/PKCS5Padding");
         c.init(Cipher.DECRYPT_MODE, key, ivspec);
         byte[] newPlaintext = new byte[c.getOutputSize(ciphertext.length)];
         c.doFinal(ciphertext, 0, newPlaintext.length, newPlaintext);
 
-        return newPlaintext;
+        // find last non-zero byte (O(1) since there padding bits is upper bounded by blocksize)
+        int lastCharInd = newPlaintext.length - 1;
+        while (newPlaintext[lastCharInd] == 0)
+            lastCharInd--;
+
+        return new String(newPlaintext, 0, lastCharInd + 1);
     }
 }
 
