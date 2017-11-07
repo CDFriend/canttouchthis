@@ -5,12 +5,14 @@ import canttouchthis.common.Message;
 import javax.swing.SwingUtilities;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyListener;
+import java.awt.event.KeyEvent;
 
 /**
  * Manages events between a ConversationModel and a ConversationView.
  * Delegates all UI tasks to the swing event queue.
  */
-public class ConversationController implements ActionListener {
+public class ConversationController implements ActionListener, KeyListener {
 
     protected ConversationModel _model;
     protected ConversationView _view;
@@ -33,6 +35,7 @@ public class ConversationController implements ActionListener {
 
         // add action listener for send button
         this._view.sendButton.addActionListener(this);
+        this._view.sendField.addKeyListener(this);
 
         this._view.updateConversation();
     }
@@ -93,21 +96,33 @@ public class ConversationController implements ActionListener {
         Object source = e.getSource();
 
         // if send button was pressed and handler is set
-        if (source == _view.sendButton && this.sendHandler != null) {
-
-            // TODO: make more descriptive identities
-            Message m = new Message("Alice", "Bob", System.currentTimeMillis(),
-                    _view.sendField.getText());
-
-            // clear message field
-            this._view.sendField.setText("");
-
-            // add message to UI and pass to handler
-            this.addMessage(m);
-            this.sendHandler.onMessageSend(m);
-
+        if (source == _view.sendButton || source == _view.sendField && this.sendHandler != null) {
+            onSend();
         }
 
+    }
+
+    public void keyPressed(KeyEvent e) {
+        if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+            onSend();
+        }
+    }
+
+    public void keyTyped(KeyEvent e) { }
+
+    public void keyReleased(KeyEvent e) { }
+
+    private void onSend() {
+        // TODO: make more descriptive identities
+        Message m = new Message("Alice", "Bob", System.currentTimeMillis(),
+                _view.sendField.getText());
+
+        // clear message field
+        this._view.sendField.setText("");
+
+        // add message to UI and pass to handler
+        this.addMessage(m);
+        this.sendHandler.onMessageSend(m);
     }
 
 }
