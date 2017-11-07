@@ -10,8 +10,24 @@ package canttouchthis.common;
 
 import java.security.*;
 import javax.crypto.*;
+import javax.crypto.spec.IvParameterSpec;
 
 public class CryptoServices {
+
+    /* 
+     * Initialize constructor
+     * for initialization vector for use in encryption/decryption with Cipher
+     */
+    public SecureRandom randomIVGenerator;
+    public byte[] iv;
+    public IvParameterSpec ivspec;
+
+    public CryptoServices() {
+        this.randomIVGenerator = new SecureRandom();
+        this.iv = new byte[16];
+        randomIVGenerator.nextBytes(iv);
+        this.ivspec = new IvParameterSpec(iv);
+    }
 
     /**
      * Encrypt plaintext with AES.
@@ -22,7 +38,7 @@ public class CryptoServices {
      */
     public byte[] encryptSymmetric(byte[] plaintext, Key key) throws Exception {
         Cipher c = Cipher.getInstance("AES/GCM/PKCS5Padding");
-        c.init(Cipher.ENCRYPT_MODE, key);
+        c.init(Cipher.ENCRYPT_MODE, key, ivspec);
         byte[] ciphertext = new byte[c.getOutputSize(plaintext.length)];
         c.doFinal(plaintext, 0, plaintext.length, ciphertext);
 
@@ -38,7 +54,7 @@ public class CryptoServices {
      */
     public byte[] decryptSymmetric(byte[] ciphertext, Key key) throws Exception {
         Cipher c = Cipher.getInstance("AES/GCM/PKCS5Padding");
-        c.init(Cipher.DECRYPT_MODE, key);
+        c.init(Cipher.DECRYPT_MODE, key, ivspec);
         byte[] newPlaintext = new byte[c.getOutputSize(ciphertext.length)];
         c.doFinal(ciphertext, 0, newPlaintext.length, newPlaintext);
 
