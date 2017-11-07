@@ -19,7 +19,8 @@ class Main {
 
 
         // Setup login view
-        LoginController loginController = new LoginController(new LoginView());
+        LoginView lView = new LoginView("canttouchthis Client v1.0");
+        LoginController loginController = new LoginController(lView);
 
         // Setup connection view
         ConnectController connectController = new ConnectController(new ConnectView());
