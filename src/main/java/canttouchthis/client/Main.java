@@ -38,7 +38,7 @@ class Main {
                 public String tryHandleLogin(String username, String password) {
 
                     try {
-                        if (auth.checkAuth(username, password, Authenticator.UserType.USERTYPE_CLIENT)) {
+                        if (auth.checkAuth(username, password, Authenticator.UserType.USERTYPE_CLIENT) != null) {
                             loginController.hideView();
                             connectController.showView();
                             return null;

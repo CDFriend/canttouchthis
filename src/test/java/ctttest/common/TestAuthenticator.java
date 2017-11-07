@@ -16,7 +16,7 @@ public class TestAuthenticator extends TestCase {
 
         try {
             Authenticator auth = new Authenticator("auth_db.sqlite");
-            assertTrue(auth.checkAuth(ADMIN_USER, ADMIN_PWD, Authenticator.UserType.USERTYPE_SERVER));
+            assertTrue(auth.checkAuth(ADMIN_USER, ADMIN_PWD, Authenticator.UserType.USERTYPE_SERVER) != null);
         }
         catch (java.sql.SQLException ex) {
             ex.printStackTrace();

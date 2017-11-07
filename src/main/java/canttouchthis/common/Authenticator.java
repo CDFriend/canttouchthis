@@ -20,7 +20,18 @@ public class Authenticator {
         _conn = DriverManager.getConnection(url);
     }
 
-    public boolean checkAuth(String username, String password, UserType type) throws SQLException {
+    /**
+     * Checks that a set of login credentials is valid and returns an identity if the
+     * credentials are valid.
+     *
+     * @param username Username to check credentials for.
+     * @param password Password to check for a given username.
+     * @param type Scope for the user (will be either SERVER or CLIENT).
+     *
+     * @return String identity if the user is authenticated, otherwise null.
+     * @throws SQLException If an error is encountered accessing the auth database.
+     */
+    public String checkAuth(String username, String password, UserType type) throws SQLException {
 
         String typeString = type==UserType.USERTYPE_SERVER ? "SERVER" : "CLIENT";
         String query = "SELECT pwdHash FROM data_users WHERE uname=? AND TYPE=?";
@@ -37,12 +48,18 @@ public class Authenticator {
             // SHA-256 hash of password should match value in database.
             String reqHash = Base64.getEncoder().encodeToString(IntegrityChecking.generateMessageDigest(password));
             String dbHash = s.getString(1);
-            return reqHash.equals(dbHash);
+
+            if (reqHash.equals(dbHash)) {
+                return username;
+            }
+            else {
+                return null;
+            }
 
         }
         else {
             // no rows in result set. User does not exist.
-            return false;
+            return null;
         }
 
     }

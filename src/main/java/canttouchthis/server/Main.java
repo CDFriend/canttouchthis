@@ -52,7 +52,7 @@ class Main {
                 public String tryHandleLogin(String username, String password) {
 
                     try {
-                        if (auth.checkAuth(username, password, Authenticator.UserType.USERTYPE_SERVER)) {
+                        if (auth.checkAuth(username, password, Authenticator.UserType.USERTYPE_SERVER) != null) {
                             loginController.hideView();
                             waitForConThread.start();
                             return null;
