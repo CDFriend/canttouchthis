@@ -5,6 +5,7 @@ repositories {
 }
 
 dependencies {
+    compile 'org.xerial:sqlite-jdbc:3.20.1'
     testCompile 'junit:junit:4.12'
 }
 
@@ -23,6 +24,12 @@ sourceSets {
     }
 }
 
+task makeAuthDB(type:Exec) {
+    commandLine 'python', 'generate_auth_db.py'
+}
+
+tasks.compileJava.dependsOn(makeAuthDB)
+
 // Test options
 test {
     testLogging {
@@ -40,4 +47,36 @@ task run_server(type:JavaExec) {
 task run_client(type:JavaExec) {
     main = 'canttouchthis.client.Main'
     classpath = sourceSets.main.runtimeClasspath
+}
+
+// Generate JARs
+task server_jar(type:Jar) {
+    from (sourceSets.main.output) {
+        include "**"
+        archiveName "canttouchthis-server-1.0.jar"
+    }
+
+    manifest {
+        attributes "Main-Class" : "canttouchthis.server.Main"
+    }
+}
+
+task client_jar(type:Jar) {
+    from (sourceSets.main.output) {
+        include "**"
+        archiveName "canttouchthis-client-1.0.jar"
+    }
+
+    manifest {
+        attributes "Main-Class" : "canttouchthis.client.Main"
+    }
+}
+
+task make_dist(type: Copy, dependsOn: [server_jar, client_jar]) {
+    from ("./") {
+        include "*.sqlite"
+    }
+
+    from "build/libs/"
+    into dist_folder
 }

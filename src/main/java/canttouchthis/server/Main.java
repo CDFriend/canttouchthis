@@ -1,7 +1,11 @@
 package canttouchthis.server;
 
+import canttouchthis.common.Authenticator;
 import canttouchthis.common.MessageMonitorThread;
 import canttouchthis.ui.*;
+
+import javax.swing.*;
+import java.sql.SQLException;
 
 class Main {
 
@@ -38,16 +42,35 @@ class Main {
             }
         });
 
-        // After checking auth, start waiting for a connection.
-        loginController.setLoginHandler(new ILoginHandler() {
-            @Override
-            public String tryHandleLogin(String username, String password) {
-                // TODO: check auth
-                loginController.hideView();
-                waitForConThread.start();
-                return null;
-            }
-        });
+        String dbfile = "auth_db.sqlite";
+        try {
+            Authenticator auth = new Authenticator(dbfile);
+
+            // When login button clicked...
+            loginController.setLoginHandler(new ILoginHandler() {
+                @Override
+                public String tryHandleLogin(String username, String password) {
+
+                    try {
+                        if (auth.checkAuth(username, password, Authenticator.UserType.USERTYPE_SERVER)) {
+                            loginController.hideView();
+                            waitForConThread.start();
+                            return null;
+                        } else {
+                            return "Invalid username or password!";
+                        }
+                    } catch (SQLException ex) {
+                        return "Error looking up credentials: " + ex.getCause();
+                    }
+
+                }
+            });
+        }
+        catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null,"Could not find authentication database: "
+                    + dbfile);
+            return;
+        }
 
     }
 
