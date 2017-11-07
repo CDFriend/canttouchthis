@@ -2,15 +2,12 @@ package ctttest.common;
 
 import canttouchthis.common.Authenticator;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import junit.framework.*;
 
 public class TestAuthenticator extends TestCase {
-
-    Authenticator auth;
-
-    public void setUp() throws java.sql.SQLException {
-        auth = new Authenticator("auth_db.sqlite");
-    }
 
     public void testAdminIsValidUser() {
 
@@ -18,6 +15,7 @@ public class TestAuthenticator extends TestCase {
         final String ADMIN_PWD = "nimda";
 
         try {
+            Authenticator auth = new Authenticator("auth_db.sqlite");
             assertTrue(auth.checkAuth(ADMIN_USER, ADMIN_PWD, Authenticator.UserType.USERTYPE_SERVER));
         }
         catch (java.sql.SQLException ex) {
@@ -25,6 +23,20 @@ public class TestAuthenticator extends TestCase {
             assertTrue("SQL error checking credentials!", false);
         }
 
+    }
+
+    public void testAuthDBIsReadOnly() {
+        try {
+            Connection conn = DriverManager.getConnection("jdbc:sqlite:auth_db.sqlite");
+            PreparedStatement stmt = conn.prepareStatement(
+                    "INSERT INTO data_users VALUES (\"I\", \"HACKED\", \"YOU\");");
+            stmt.execute();
+        }
+        catch (java.sql.SQLException ex) {
+            assertTrue("Auth DB is not read only!", ex.getMessage().contains("[SQLITE_READONLY]"));
+            return;
+        }
+        assertTrue("Auth DB is not read only!", false);
     }
 
 }

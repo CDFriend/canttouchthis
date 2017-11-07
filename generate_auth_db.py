@@ -11,8 +11,11 @@ Client test credentials: user/resu
 
 import base64
 import os
+import stat
 import sqlite3
 import hashlib
+
+AUTH_DB_NAME = "auth_db.sqlite"
 
 TEST_CREDENTIALS = [
     ["admin", "nimda", "SERVER"],
@@ -22,11 +25,11 @@ TEST_CREDENTIALS = [
 
 def main():
     # remove an old auth db if present
-    if os.path.exists("auth_db.sqlite"):
-        os.remove("auth_db.sqlite")
+    if os.path.exists(AUTH_DB_NAME):
+        os.remove(AUTH_DB_NAME)
 
     # create new sqlite database
-    con = sqlite3.connect("auth_db.sqlite")
+    con = sqlite3.connect(AUTH_DB_NAME)
     cur = con.cursor()
 
     # create table for user data
@@ -43,6 +46,9 @@ def main():
 
     con.commit()
     con.close()
+
+    # make sqlite file read-only
+    os.chmod(AUTH_DB_NAME, stat.S_IREAD)
 
 
 if __name__ == "__main__":
