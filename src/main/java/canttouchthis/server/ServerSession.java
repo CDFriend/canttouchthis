@@ -16,7 +16,9 @@ import java.net.UnknownHostException;
 import java.security.*;
 import java.security.spec.X509EncodedKeySpec;
 import javax.crypto.KeyAgreement;
-import javax.crypto.KeyAgreementSpi;
+import javax.crypto.spec.SecretKeySpec;
+
+
 
 //Exceptions
 import java.security.spec.InvalidKeySpecException;
@@ -94,31 +96,28 @@ public class ServerSession implements IChatSession {
             socketOutputStream.write(pubByte);
 
             //rebuild the public key from the opposite side
-            Key clientPublicKey = KeyFactory.getInstance("RSA").generatePublic(new X509EncodedKeySpec(clientPubKeyByte));
+            Key clientPublicKey = KeyFactory.getInstance("DiffieHellman").generatePublic(new X509EncodedKeySpec(clientPubKeyByte));
             //System.out.println(String(clientPubKeyByte));
 
             //establish KeyAgreement
-            KeyAgreement keyAgree = KeyAgreement.getInstance("AES");
+            KeyAgreement keyAgree = KeyAgreement.getInstance("DiffieHellman");
             keyAgree.init(privKey);
 
             //creates a noneKey to use if we were doing this step multiple times. we are not.
-            Key noneKey = keyAgree.doPhase(clientPublicKey, true);
+            keyAgree.doPhase(clientPublicKey, true);
 
             //Create shared secret to use
-            Key sharedSecret = keyAgree.generateSecret("AES");
+            byte[] bytey = keyAgree.generateSecret();
+
+            Key sharedSecret = new SecretKeySpec(bytey, 0, bytey.length, "AES");
+
+            socketOutputStream.flush();
+
 
         }
-        catch (IOException ex) {
+        catch (IOException|NoSuchAlgorithmException|InvalidKeyException|InvalidKeySpecException ex) {
+            ex.printStackTrace();
             return false;
-        }
-        catch (NoSuchAlgorithmException ex1) {
-          return false;
-        }
-        catch (InvalidKeySpecException ex2) {
-          return false;
-        }
-        catch (InvalidKeyException ex3) {
-          return false;
         }
 
         //TODO: check authentication and perform key exchange

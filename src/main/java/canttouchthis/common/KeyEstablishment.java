@@ -10,7 +10,7 @@ public class KeyEstablishment{
 
 	public KeyEstablishment(){
 		try{
-			KeyPairGenerator keyGen = KeyPairGenerator.getInstance("RSA");
+			KeyPairGenerator keyGen = KeyPairGenerator.getInstance("DiffieHellman");
 			keyGen.initialize(2048);
 			key = keyGen.generateKeyPair();
 		}

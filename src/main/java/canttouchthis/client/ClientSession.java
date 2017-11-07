@@ -15,10 +15,17 @@ import java.net.UnknownHostException;
 import java.security.*;
 import java.security.spec.X509EncodedKeySpec;
 import javax.crypto.KeyAgreement;
-import javax.crypto.KeyAgreementSpi;
+import javax.crypto.spec.SecretKeySpec;
 
 //Exceptions
 import java.security.spec.InvalidKeySpecException;
+
+
+
+import java.security.Provider;
+import java.security.Provider.Service;
+import java.security.Security;
+import java.util.Set;
 
 
 /**
@@ -48,13 +55,25 @@ public class ClientSession implements IChatSession {
         Key pubKey = es.getPublicKey();
 
         //encode keys
-
-        //System.out.println(pubByteStr);
-
         byte[] pubByte = pubKey.getEncoded();
         //String pubFormat = pubKey.getFormat();
 
         //System.out.println(pubFormat);
+/*
+        Provider [] providerList = Security.getProviders();
+    for (Provider provider : providerList)
+    {
+      System.out.println("Name: "  + provider.getName());
+      System.out.println("Information:\n" + provider.getInfo());
+
+      Set<Service> serviceList = provider.getServices();
+      for (Service service : serviceList)
+       {
+         System.out.println("Service Type: " + service.getType() + " Algorithm " + service.getAlgorithm());
+       }
+    }
+
+*/
 
         try {
             this.connection = new Socket(this.addr, this.port);
@@ -67,30 +86,24 @@ public class ClientSession implements IChatSession {
             int q = serverInputStream.read(serverPubKeyByte);
 
             //rebuild the public key from the opposite side
-            Key serverPublicKey = KeyFactory.getInstance("RSA").generatePublic(new X509EncodedKeySpec(serverPubKeyByte));
+            Key serverPublicKey = KeyFactory.getInstance("DiffieHellman").generatePublic(new X509EncodedKeySpec(serverPubKeyByte));
 
-            //establish KeyAgreement
-            KeyAgreement keyAgree = KeyAgreement.getInstance("AES");
+            //establish KeyAgreement - SunJCE
+            KeyAgreement keyAgree = KeyAgreement.getInstance("DiffieHellman");
             keyAgree.init(privKey);
-
-            //creates a noneKey to use if we were doing this step multiple times. we are not.
-            Key noneKey = keyAgree.doPhase(serverPublicKey, true);
+            keyAgree.doPhase(serverPublicKey, true);
 
             //Create shared secret to use
-            Key sharedSecret = keyAgree.generateSecret("AES");
+            byte[] bytey = keyAgree.generateSecret();
+
+            Key sharedSecret = new SecretKeySpec(bytey, 0, bytey.length, "AES");
+
+            socketOutputStream.flush();
 
         }
-        catch (IOException ex) {
+        catch (IOException|NoSuchAlgorithmException|InvalidKeyException|InvalidKeySpecException ex) {
+            ex.printStackTrace();
             return false;
-        }
-        catch (NoSuchAlgorithmException ex1) {
-          return false;
-        }
-        catch (InvalidKeySpecException ex2) {
-          return false;
-        }
-        catch (InvalidKeyException ex3) {
-          return false;
         }
 
         return true;
