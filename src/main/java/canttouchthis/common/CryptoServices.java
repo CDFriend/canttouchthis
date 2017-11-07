@@ -37,7 +37,7 @@ public class CryptoServices {
      * @throws Exception For all possible exceptions (i.e. invalid key, bad padding, etc.)
      */
     public byte[] encryptSymmetric(byte[] plaintext, Key key) throws Exception {
-        Cipher c = Cipher.getInstance("AES/GCM/PKCS5Padding");
+        Cipher c = Cipher.getInstance("AES/CBC/PKCS5Padding");
         c.init(Cipher.ENCRYPT_MODE, key, ivspec);
         byte[] ciphertext = new byte[c.getOutputSize(plaintext.length)];
         c.doFinal(plaintext, 0, plaintext.length, ciphertext);
@@ -53,7 +53,7 @@ public class CryptoServices {
      * @throws Exception For all possible exceptions (i.e. invalid key, bad padding, etc.)
      */
     public byte[] decryptSymmetric(byte[] ciphertext, Key key) throws Exception {
-        Cipher c = Cipher.getInstance("AES/GCM/PKCS5Padding");
+        Cipher c = Cipher.getInstance("AES/CBC/PKCS5Padding");
         c.init(Cipher.DECRYPT_MODE, key, ivspec);
         byte[] newPlaintext = new byte[c.getOutputSize(ciphertext.length)];
         c.doFinal(ciphertext, 0, newPlaintext.length, newPlaintext);
