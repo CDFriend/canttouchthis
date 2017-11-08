@@ -1,5 +1,6 @@
 package canttouchthis.common;
 
+import java.io.Serializable;
 import java.util.Base64;
 import java.sql.*;
 
@@ -7,6 +8,26 @@ import java.sql.*;
  * Checks whether or not a username/password pair is valid.
  */
 public class Authenticator {
+
+    /**
+     * Datastructure containing a user's identity. Also carries a nonce
+     * which can be used to verify an identity against an authentication
+     * database.
+     */
+    public class Identity implements Serializable {
+
+        private String _uname;
+        protected byte[] _nonce;
+
+        protected Identity (String username, String nonce) {
+            this._uname = username;
+            this._nonce = Base64.getDecoder().decode(nonce);
+        }
+
+        public String getUsername() {
+            return _uname;
+        }
+    }
 
     public enum UserType {
         USERTYPE_CLIENT,
@@ -31,10 +52,10 @@ public class Authenticator {
      * @return String identity if the user is authenticated, otherwise null.
      * @throws SQLException If an error is encountered accessing the auth database.
      */
-    public String checkAuth(String username, String password, UserType type) throws SQLException {
+    public Identity checkAuth(String username, String password, UserType type) throws SQLException {
 
         String typeString = type==UserType.USERTYPE_SERVER ? "SERVER" : "CLIENT";
-        String query = "SELECT pwdHash FROM data_users WHERE uname=? AND TYPE=?";
+        String query = "SELECT pwdHash, nonce FROM data_users WHERE uname=? AND TYPE=?";
 
         PreparedStatement stmt = _conn.prepareStatement(query,
                                                         ResultSet.TYPE_FORWARD_ONLY,
@@ -50,7 +71,7 @@ public class Authenticator {
             String dbHash = s.getString(1);
 
             if (reqHash.equals(dbHash)) {
-                return username;
+                return new Identity(username, s.getString(2));
             }
             else {
                 return null;
