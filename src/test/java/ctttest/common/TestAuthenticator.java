@@ -29,7 +29,7 @@ public class TestAuthenticator extends TestCase {
         try {
             Connection conn = DriverManager.getConnection("jdbc:sqlite:auth_db.sqlite");
             PreparedStatement stmt = conn.prepareStatement(
-                    "INSERT INTO data_users VALUES (\"I\", \"HACKED\", \"YOU\");");
+                    "INSERT INTO data_users VALUES (\"I\", \"HACKED\", \"YOU\", \"LOSER\");");
             stmt.execute();
         }
         catch (java.sql.SQLException ex) {
