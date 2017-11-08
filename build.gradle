@@ -25,6 +25,7 @@ sourceSets {
 }
 
 task makeAuthDB(type:Exec) {
+    outputs.file file('auth_db.sqlite')
     commandLine 'python', 'generate_auth_db.py'
 }
 
