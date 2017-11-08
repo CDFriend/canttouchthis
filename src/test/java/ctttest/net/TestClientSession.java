@@ -59,7 +59,7 @@ public class TestClientSession extends TestCase {
      */
     public void testMessageSerialization() {
         // SETUP
-        Message m = new Message("Alice", "Bob", 0, "This is a test!!!");
+        Message m = new Message("This is a test!!!", 0);
         WaitForConnection server = new WaitForConnection(50000, true);
         server.start();
 
@@ -80,8 +80,6 @@ public class TestClientSession extends TestCase {
         // VERIFY
         assertTrue(success);
         assertTrue(server.success);
-        assertEquals(m.sender, recv.sender);
-        assertEquals(m.reciever, recv.reciever);
         assertEquals(m.message, recv.message);
         assertTrue(m.timestamp.equals(recv.timestamp));
     }

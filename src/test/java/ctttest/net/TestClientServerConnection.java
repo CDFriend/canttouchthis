@@ -25,7 +25,7 @@ public class TestClientServerConnection extends TestCase {
         // SETUP
         ServerSession s = new ServerSession();
         ClientSession c = new ClientSession();
-        Message m = new Message("Alice", "Bob", 0, "This is a test!!!");
+        Message m = new Message("This is a test!!!", 0);
 
         // EXEC
         TryRecieveMessageClient cThread = new TryRecieveMessageClient(c);
@@ -44,8 +44,6 @@ public class TestClientServerConnection extends TestCase {
 
         // VERIFY
         assertTrue("Error running client thread!", cThread.success);
-        assertEquals(m.sender, recv.sender);
-        assertEquals(m.reciever, recv.reciever);
         assertEquals(m.message, recv.message);
         assertTrue(m.timestamp.equals(recv.timestamp));
     }
@@ -59,7 +57,7 @@ public class TestClientServerConnection extends TestCase {
         // SETUP
         ServerSession s = new ServerSession();
         ClientSession c = new ClientSession();
-        Message m = new Message("Alice", "Bob", 0, "This is a test!!!");
+        Message m = new Message("This is a test!!!", 0);
 
         // EXEC
         TryRecieveMessageServer sThread = new TryRecieveMessageServer(s);
@@ -78,8 +76,6 @@ public class TestClientServerConnection extends TestCase {
 
         // VERIFY
         assertTrue("Error running client thread!", sThread.success);
-        assertEquals(m.sender, recv.sender);
-        assertEquals(m.reciever, recv.reciever);
         assertEquals(m.message, recv.message);
         assertTrue(m.timestamp.equals(recv.timestamp));
     }
