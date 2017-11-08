@@ -118,15 +118,12 @@ public class ConversationController implements ActionListener, KeyListener {
     public void keyReleased(KeyEvent e) { }
 
     private void onSend() {
-        // TODO: make more descriptive identities
-        Message m = new Message("Alice", "Bob", System.currentTimeMillis(),
-                _view.sendField.getText());
+        Message m = new Message(_view.sendField.getText(), System.currentTimeMillis());
 
         // clear message field
         this._view.sendField.setText("");
 
-        // add message to UI and pass to handler
-        this.addMessage(m);
+        // pass to handler
         this.sendHandler.onMessageSend(m);
     }
 

@@ -104,7 +104,7 @@ public class ConversationView extends JFrame {
      */
     private void renderMessage(Message m) {
         String rendered = String.format("[%s] %s: %s\n", date_format.format(m.timestamp),
-                m.sender, m.message);
+                m.getSenderName(), m.message);
 
         // TODO: do this more efficiently and add styling
         chatPane.append(rendered);

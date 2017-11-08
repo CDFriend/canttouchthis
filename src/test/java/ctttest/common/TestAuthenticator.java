@@ -1,6 +1,6 @@
 package ctttest.common;
 
-import canttouchthis.common.Authenticator;
+import canttouchthis.common.auth.Authenticator;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

@@ -1,4 +1,6 @@
-package canttouchthis.common;
+package canttouchthis.common.auth;
+
+import canttouchthis.common.IntegrityChecking;
 
 import java.io.Serializable;
 import java.util.Base64;
@@ -8,26 +10,6 @@ import java.sql.*;
  * Checks whether or not a username/password pair is valid.
  */
 public class Authenticator {
-
-    /**
-     * Datastructure containing a user's identity. Also carries a nonce
-     * which can be used to verify an identity against an authentication
-     * database.
-     */
-    public class Identity implements Serializable {
-
-        private String _uname;
-        protected byte[] _nonce;
-
-        protected Identity (String username, String nonce) {
-            this._uname = username;
-            this._nonce = Base64.getDecoder().decode(nonce);
-        }
-
-        public String getUsername() {
-            return _uname;
-        }
-    }
 
     public enum UserType {
         USERTYPE_CLIENT,
@@ -42,14 +24,14 @@ public class Authenticator {
     }
 
     /**
-     * Checks that a set of login credentials is valid and returns an identity if the
+     * Checks that a set of login credentials is valid and returns an ident if the
      * credentials are valid.
      *
      * @param username Username to check credentials for.
      * @param password Password to check for a given username.
      * @param type Scope for the user (will be either SERVER or CLIENT).
      *
-     * @return String identity if the user is authenticated, otherwise null.
+     * @return String ident if the user is authenticated, otherwise null.
      * @throws SQLException If an error is encountered accessing the auth database.
      */
     public Identity checkAuth(String username, String password, UserType type) throws SQLException {

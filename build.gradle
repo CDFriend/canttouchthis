@@ -40,12 +40,12 @@ test {
 
 // Custom build tasks
 task run_server(type:JavaExec) {
-    main = 'canttouchthis.server.Main'
+    main = 'canttouchthis.server.ServerApp'
     classpath = sourceSets.main.runtimeClasspath
 }
 
 task run_client(type:JavaExec) {
-    main = 'canttouchthis.client.Main'
+    main = 'canttouchthis.client.ClientApp'
     classpath = sourceSets.main.runtimeClasspath
 }
 

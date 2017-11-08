@@ -1,7 +1,6 @@
 package canttouchthis.client;
 
-import canttouchthis.common.Authenticator;
-import canttouchthis.common.Message;
+import canttouchthis.common.auth.*;
 import canttouchthis.common.MessageMonitorThread;
 import canttouchthis.ui.*;
 
@@ -9,38 +8,48 @@ import javax.swing.*;
 import java.net.UnknownHostException;
 import java.sql.SQLException;
 
-class Main {
+class ClientApp {
+
+    public static final String DB_FILE = "auth_db.sqlite";
+
+    public ClientSession sess;
+
+    public LoginController loginController;
+    public ConnectController connectController;
+    public ConversationController conversationController;
+
+    public Identity ident;
 
     public static void main(String[] args) {
 
-        ClientSession session = new ClientSession();
+        ClientApp app = new ClientApp();
 
-        String dbfile = "auth_db.sqlite";
-
+        app.sess = new ClientSession();
 
         // Setup login view
-        LoginController loginController = new LoginController(new LoginView());
+        app.loginController = new LoginController(new LoginView());
 
         // Setup connection view
-        ConnectController connectController = new ConnectController(new ConnectView());
+        app.connectController = new ConnectController(new ConnectView());
 
         // Setup message view
         ConversationModel model = new ConversationModel();
-        ConversationController conversationController = new ConversationController(new ConversationView(model), model);
+        app.conversationController = new ConversationController(new ConversationView(model), model);
 
 
         try {
-            Authenticator auth = new Authenticator(dbfile);
+            Authenticator auth = new Authenticator(DB_FILE);
 
             // When login button clicked...
-            loginController.setLoginHandler(new ILoginHandler() {
+            app.loginController.setLoginHandler(new ILoginHandler() {
                 @Override
                 public String tryHandleLogin(String username, String password) {
 
                     try {
-                        if (auth.checkAuth(username, password, Authenticator.UserType.USERTYPE_CLIENT) != null) {
-                            loginController.hideView();
-                            connectController.showView();
+                        app.ident = auth.checkAuth(username, password, Authenticator.UserType.USERTYPE_CLIENT);
+                        if (app.ident != null) {
+                            app.loginController.hideView();
+                            app.connectController.showView();
                             return null;
                         } else {
                             return "Invalid username or password!";
@@ -55,12 +64,12 @@ class Main {
         }
         catch (java.sql.SQLException ex) {
             JOptionPane.showMessageDialog(null,"Could not find authentication database: "
-                    + dbfile);
+                    + DB_FILE);
             return;
         }
 
         // When connect button clicked...
-        connectController.setConnectHandler(new IConnectHandler() {
+        app.connectController.setConnectHandler(new IConnectHandler() {
             @Override
             public String tryHandleConnect(String host, int port, boolean checkInt, boolean useConf) {
 
@@ -68,13 +77,15 @@ class Main {
 
                 // TODO: establish keys and encrypt messages. Beary insecure!
                 try {
-                    if (session.connect(host, port)) {
+                    if (app.sess.connect(host, port)) {
                         // connection was successful
-                        connectController.hideView();
-                        conversationController.showView();
+                        app.connectController.hideView();
+                        app.conversationController.showView();
 
                         // once conversation starts, start message monitor thread
-                        MessageMonitorThread mm = new MessageMonitorThread(session, conversationController);
+                        MessageMonitorThread mm = new MessageMonitorThread(app.sess,
+                                                                           app.conversationController,
+                                                                           app.ident);
                         mm.start();
 
                         return null;
@@ -93,7 +104,7 @@ class Main {
 
 
         // Start on login view
-        loginController.showView();
+        app.loginController.showView();
 
     }
 
