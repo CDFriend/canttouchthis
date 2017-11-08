@@ -5,6 +5,8 @@ import java.awt.*;
 import java.text.SimpleDateFormat;
 import java.util.Iterator;
 import javax.swing.*;
+import javax.swing.text.SimpleAttributeSet;
+import javax.swing.text.StyleConstants;
 
 /**
  * Window for sending and recieving chat messages (client or server side).
@@ -19,7 +21,7 @@ public class ConversationView extends JFrame {
 
     private final SimpleDateFormat date_format = new SimpleDateFormat("HH:mm:ss");
 
-    protected JTextArea chatPane;
+    protected JTextPane chatPane;
     protected JTextField sendField;
     protected JButton sendButton;
 
@@ -46,7 +48,7 @@ public class ConversationView extends JFrame {
         c.insets = new Insets(COMP_INSETS, COMP_INSETS, COMP_INSETS, COMP_INSETS);
 
         // chat window
-        chatPane = new JTextArea();
+        chatPane = new JTextPane();
         JScrollPane chatScroll = new JScrollPane(chatPane);
 
         c.gridx = 0;
@@ -83,6 +85,9 @@ public class ConversationView extends JFrame {
         c.fill = GridBagConstraints.HORIZONTAL;
         pane.add(sendButton, c);
 
+        // add all messages already in model
+        this.updateConversation();
+
         pack();
     }
 
@@ -99,15 +104,24 @@ public class ConversationView extends JFrame {
     }
 
     /**
+     * Render a warning to the chat view.
+     * @param message Message to be displayed after "WARNING: "
+     */
+    protected void renderWarningMessage(String message) {
+        String rendered = "WARNING: " + message + "\n";
+        chatPane.setText(chatPane.getText() + rendered);
+    }
+
+    /**
      * Render a Message object to the view.
      * @param m Message to be rendered.
      */
-    private void renderMessage(Message m) {
+    protected void renderMessage(Message m) {
         String rendered = String.format("[%s] %s: %s\n", date_format.format(m.timestamp),
                 m.getSenderName(), m.message);
 
         // TODO: do this more efficiently and add styling
-        chatPane.append(rendered);
+        chatPane.setText(chatPane.getText() + rendered);
         chatPane.setCaretPosition(chatPane.getDocument().getLength());
     }
 

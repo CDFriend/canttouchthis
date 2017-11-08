@@ -35,7 +35,7 @@ public class MessageMonitorThread extends Thread {
             @Override
             public void onMessageSend(Message m) {
                 try {
-//                    m.setIdentity(ident);
+                    m.setIdentity(ident);
                     ui.addMessage(m);
                     session.sendMessage(m);
                 }
@@ -53,7 +53,7 @@ public class MessageMonitorThread extends Thread {
 
                 // check message identity against database
                 if (!(this._auth.verifyIdentity(m.senderIdent))){
-                    System.out.println("Sender could not be verified!");
+                    this._ui.showWarning("Sender could not be verified!");
                 }
 
                 this._ui.addMessage(m);

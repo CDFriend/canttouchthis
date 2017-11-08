@@ -56,7 +56,15 @@ public class ConversationController implements ActionListener, KeyListener {
      */
     public void addMessage(Message m) {
         this._model.addMessage(m);
-        this._view.updateConversation();
+        this._view.renderMessage(m);
+    }
+
+    /**
+     * Shows a warning in the chat view.
+     * @param message Message to be shown to the user.
+     */
+    public void showWarning(String message) {
+        this._view.renderWarningMessage(message);
     }
 
     /**
