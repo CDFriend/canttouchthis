@@ -38,6 +38,12 @@ test {
     }
 }
 
+// Remove dist folder during clean (NOTE: requires admin permissions!)
+clean.doFirst {
+    delete dist_folder
+    println("Deleting " + dist_folder)
+}
+
 // Custom build tasks
 task run_server(type:JavaExec) {
     main = 'canttouchthis.server.Main'
