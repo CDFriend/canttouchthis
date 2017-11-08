@@ -60,12 +60,14 @@ public class MessageMonitorThread extends Thread {
             }
             catch (SQLException ex) {
                 ex.printStackTrace(System.err);
+                this._ui.showFatal("Error getting data from auth database!");
             }
             catch (EOFException ex) {
-                this._ui.showDisconnect();
+                this._ui.showFatal("Other user disconnected!");
             }
             catch (IOException ex) {
                 ex.printStackTrace(System.err);
+                this._ui.showFatal("Error in websocket transmission!");
             }
         }
     }

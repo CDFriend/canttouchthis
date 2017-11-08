@@ -93,8 +93,11 @@ public class ConversationController implements ActionListener, KeyListener {
         });
     }
 
-    public void showDisconnect() {
-        JOptionPane.showMessageDialog(this._view,"Other user disconnected!");
+    /**
+     * Show a message before closing the application.
+     */
+    public void showFatal(String msg) {
+        JOptionPane.showMessageDialog(this._view,msg);
         System.exit(0);
     }
 
