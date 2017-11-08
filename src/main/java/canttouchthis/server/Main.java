@@ -12,7 +12,8 @@ class Main {
     public static void main(String[] args) {
 
         // Start login and chat views
-        LoginController loginController = new LoginController(new LoginView());
+        LoginView lView = new LoginView("canttouchthis Server v1.0");
+        LoginController loginController = new LoginController(lView);
 
         ConversationModel conversationModel = new ConversationModel();
         ConversationController conversationController =
