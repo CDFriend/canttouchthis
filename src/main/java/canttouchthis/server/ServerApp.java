@@ -9,9 +9,12 @@ import java.sql.SQLException;
 
 class ServerApp {
 
+    private static final String DB_FILE = "auth_db.sqlite";
+
     public ServerSession sess;
 
     public Identity ident;
+    public Authenticator auth;
 
     public LoginController loginController;
     public ConversationController conversationController;
@@ -48,14 +51,14 @@ class ServerApp {
                 // once conversation starts, start message thread
                 MessageMonitorThread mm = new MessageMonitorThread(app.sess,
                                                                    app.conversationController,
-                                                                   app.ident);
+                                                                   app.ident,
+                                                                   app.auth);
                 mm.start();
             }
         });
 
-        String dbfile = "auth_db.sqlite";
         try {
-            Authenticator auth = new Authenticator(dbfile);
+            app.auth = new Authenticator(DB_FILE);
 
             // When login button clicked...
             app.loginController.setLoginHandler(new ILoginHandler() {
@@ -63,7 +66,7 @@ class ServerApp {
                 public String tryHandleLogin(String username, String password) {
 
                     try {
-                        app.ident = auth.checkAuth(username, password, Authenticator.UserType.USERTYPE_SERVER);
+                        app.ident = app.auth.checkAuth(username, password, Authenticator.UserType.USERTYPE_SERVER);
                         if (app.ident != null) {
                             app.loginController.hideView();
                             waitForConThread.start();
@@ -80,7 +83,7 @@ class ServerApp {
         }
         catch (SQLException ex) {
             JOptionPane.showMessageDialog(null,"Could not find authentication database: "
-                    + dbfile);
+                    + DB_FILE);
             return;
         }
 

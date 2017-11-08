@@ -75,6 +75,12 @@ public class Authenticator {
      * @return Whether or not the identity is valid.
      */
     public boolean verifyIdentity(Identity i) throws SQLException {
+
+        // do not verify if i is null
+        if (i == null) {
+            return false;
+        }
+
         String query = "SELECT nonce FROM data_users WHERE uname=?";
         PreparedStatement stmt = _conn.prepareStatement(query,
                                                         ResultSet.TYPE_FORWARD_ONLY,

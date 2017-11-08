@@ -14,20 +14,25 @@ public class Message implements Serializable {
     public final Date timestamp;
     public final String message;
 
-    private Identity _senderIdent;
+    public Identity senderIdent;
 
     public Message(String msg, long ts) {
-        _senderIdent = null;
+        senderIdent = null;
         timestamp = new Date(ts);
         message = msg;
     }
 
     public void setIdentity(Identity i) {
-        this._senderIdent = i;
+        this.senderIdent = i;
     }
 
     public String getSenderName() {
-        return this._senderIdent.getUsername();
+        if (this.senderIdent != null) {
+            return this.senderIdent.getUsername();
+        }
+        else {
+            return "UNKNOWN";
+        }
     }
 
 }

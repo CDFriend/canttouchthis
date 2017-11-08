@@ -1,25 +1,29 @@
 package canttouchthis.common;
 
+import canttouchthis.common.auth.Authenticator;
 import canttouchthis.common.auth.Identity;
 import canttouchthis.ui.ConversationController;
 import canttouchthis.ui.ISendHandler;
 
 import java.io.IOException;
 import java.io.EOFException;
+import java.sql.SQLException;
 
 public class MessageMonitorThread extends Thread {
 
     private IChatSession _session;
     private ConversationController _ui;
     private Identity _ident;
+    private Authenticator _auth;
 
     private boolean _alive;
 
     public MessageMonitorThread(IChatSession sess, ConversationController controller,
-                                Identity ident) {
+                                Identity ident, Authenticator auth) {
         this._session = sess;
         this._ui = controller;
         this._ident = ident;
+        this._auth = auth;
     }
 
     public void run() {
@@ -31,7 +35,7 @@ public class MessageMonitorThread extends Thread {
             @Override
             public void onMessageSend(Message m) {
                 try {
-                    m.setIdentity(ident);
+//                    m.setIdentity(ident);
                     ui.addMessage(m);
                     session.sendMessage(m);
                 }
@@ -46,7 +50,16 @@ public class MessageMonitorThread extends Thread {
         while (this._alive) {
             try {
                 Message m = this._session.getNextMessage();
+
+                // check message identity against database
+                if (!(this._auth.verifyIdentity(m.senderIdent))){
+                    System.out.println("Sender could not be verified!");
+                }
+
                 this._ui.addMessage(m);
+            }
+            catch (SQLException ex) {
+                ex.printStackTrace(System.err);
             }
             catch (EOFException ex) {
                 this._ui.showDisconnect();

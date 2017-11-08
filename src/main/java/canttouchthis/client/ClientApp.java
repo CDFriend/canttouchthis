@@ -18,12 +18,12 @@ class ClientApp {
     public ConnectController connectController;
     public ConversationController conversationController;
 
+    public Authenticator auth;
     public Identity ident;
 
     public static void main(String[] args) {
 
         ClientApp app = new ClientApp();
-
         app.sess = new ClientSession();
 
         // Setup login view
@@ -38,7 +38,8 @@ class ClientApp {
 
 
         try {
-            Authenticator auth = new Authenticator(DB_FILE);
+            // setup auth db
+            app.auth = new Authenticator(DB_FILE);
 
             // When login button clicked...
             app.loginController.setLoginHandler(new ILoginHandler() {
@@ -46,7 +47,7 @@ class ClientApp {
                 public String tryHandleLogin(String username, String password) {
 
                     try {
-                        app.ident = auth.checkAuth(username, password, Authenticator.UserType.USERTYPE_CLIENT);
+                        app.ident = app.auth.checkAuth(username, password, Authenticator.UserType.USERTYPE_CLIENT);
                         if (app.ident != null) {
                             app.loginController.hideView();
                             app.connectController.showView();
@@ -85,7 +86,8 @@ class ClientApp {
                         // once conversation starts, start message monitor thread
                         MessageMonitorThread mm = new MessageMonitorThread(app.sess,
                                                                            app.conversationController,
-                                                                           app.ident);
+                                                                           app.ident,
+                                                                           app.auth);
                         mm.start();
 
                         return null;
