@@ -2,7 +2,7 @@ package canttouchthis.common.auth;
 
 import canttouchthis.common.IntegrityChecking;
 
-import java.io.Serializable;
+import java.util.Arrays;
 import java.util.Base64;
 import java.sql.*;
 
@@ -65,6 +65,40 @@ public class Authenticator {
             return null;
         }
 
+    }
+
+    /**
+     * Checks whether an identity sent by another user matches one in our
+     * authentication database.
+     *
+     * @param i Identity object to check.
+     * @return Whether or not the identity is valid.
+     */
+    public boolean verifyIdentity(Identity i) throws SQLException {
+        String query = "SELECT nonce FROM data_users WHERE uname=?";
+        PreparedStatement stmt = _conn.prepareStatement(query,
+                                                        ResultSet.TYPE_FORWARD_ONLY,
+                                                        ResultSet.CONCUR_READ_ONLY);
+
+        stmt.setString(1, i.getUsername());
+
+        ResultSet s = stmt.executeQuery();
+        if (s.next()) {
+            // username found - check sent nonce matches one in database.
+            String dbNonceBase64 = s.getString(1);
+            byte[] dbNonce = Base64.getDecoder().decode(dbNonceBase64);
+
+            if (Arrays.equals(dbNonce, i._nonce)) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+        else {
+            // no user found - not valid!
+            return false;
+        }
     }
 
 }

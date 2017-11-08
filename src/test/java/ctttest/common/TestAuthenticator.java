@@ -5,6 +5,8 @@ import canttouchthis.common.auth.Authenticator;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+
+import canttouchthis.common.auth.Identity;
 import junit.framework.*;
 
 public class TestAuthenticator extends TestCase {
@@ -39,4 +41,36 @@ public class TestAuthenticator extends TestCase {
         assertTrue("Auth DB is not read only!", false);
     }
 
+    public void testValidIdentityIsValidated() {
+        try {
+            // SETUP
+            Authenticator auth = new Authenticator("auth_db.sqlite");
+            Identity ident = auth.checkAuth("admin", "nimda",
+                                            Authenticator.UserType.USERTYPE_SERVER);
+
+            // EXEC + VERIFY
+            assertTrue("Valid identity was not validated!", auth.verifyIdentity(ident));
+        }
+        catch (java.sql.SQLException ex) {
+            ex.printStackTrace();
+            assertTrue("Error reading auth db!", false);
+        }
+    }
+
+    public void testInvalidIdentityIsInvalidated() {
+        try {
+            // SETUP
+            Authenticator auth = new Authenticator("auth_db.sqlite");
+            Identity ident = Identity.generateBadIdent();
+
+            // EXEC + VERIFY
+            assertFalse("Invalid identity was not invalidated!", auth.verifyIdentity(ident));
+        }
+        catch (java.sql.SQLException ex) {
+            ex.printStackTrace();
+            assertTrue("Error reading auth db!", false);
+        }
+    }
 }
+
+

@@ -2,6 +2,7 @@ package canttouchthis.common.auth;
 
 import java.io.Serializable;
 import java.util.Base64;
+import java.util.Random;
 
 
 /**
@@ -21,5 +22,14 @@ public class Identity implements Serializable {
 
     public String getUsername() {
         return _uname;
+    }
+
+    // Create an identity with an incorrect nonce (for testing purposes).
+    public static Identity generateBadIdent() {
+        // generate random nonce (not in database)
+        byte[] b = new byte[32];
+        new Random().nextBytes(b);
+
+        return new Identity("admin", Base64.getEncoder().encodeToString(b));
     }
 }
