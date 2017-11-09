@@ -211,14 +211,14 @@ public class ServerSession implements IChatSession {
      * @return ChatMessage from the ClientSession.
      * @throws IOException If any errors occur when getting the socket input stream.
      */
-    public ChatMessage getNextMessage() throws Exception {
+    public MessagePacket getNextMessage() throws Exception {
         Cipher c = (new CryptoServices()).getDecryptCipher(sharedSecret);
         CipherInputStream cipherStream = new CipherInputStream(channel.getInputStream(), c);
 
         ObjectInputStream ois = new ObjectInputStream(cipherStream);
 
         try {
-            return (ChatMessage) ((MessagePacket) ois.readObject()).getContent();
+            return (MessagePacket) ois.readObject();
         }
         catch (ClassCastException ex) {
             System.out.printf("Got unexpected class from socket!");

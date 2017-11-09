@@ -10,7 +10,7 @@ public interface IChatSession {
      * @return New ChatMessage object from server.
      * @throws IOException If an error is encountered reading from the websocket stream.
      */
-    public ChatMessage getNextMessage() throws Exception;
+    public MessagePacket getNextMessage() throws Exception;
 
     /**
      * Sends a ChatMessage object to the server.

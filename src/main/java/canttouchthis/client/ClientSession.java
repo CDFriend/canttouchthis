@@ -172,13 +172,13 @@ public class ClientSession implements IChatSession {
      * @return New ChatMessage object from server.
      * @throws IOException If an error is encountered reading from the websocket stream.
      */
-    public ChatMessage getNextMessage() throws Exception {
+    public MessagePacket getNextMessage() throws Exception {
         Cipher c = (new CryptoServices()).getDecryptCipher(sharedSecret);
         CipherInputStream cipherStream = new CipherInputStream(connection.getInputStream(), c);
         ObjectInputStream ois = new ObjectInputStream(cipherStream);
 
         try {
-            return (ChatMessage) ((MessagePacket) ois.readObject()).getContent();
+            return (MessagePacket) ois.readObject();
         }
         catch (ClassCastException ex) {
             System.out.printf("Got unexpected class from socket!");

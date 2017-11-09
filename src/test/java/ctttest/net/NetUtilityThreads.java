@@ -2,6 +2,7 @@ package ctttest.net;
 
 import canttouchthis.client.ClientSession;
 import canttouchthis.common.ChatMessage;
+import canttouchthis.common.MessagePacket;
 import canttouchthis.server.ServerSession;
 
 import java.io.ObjectInputStream;
@@ -34,7 +35,7 @@ public class NetUtilityThreads {
             try {
                 Thread.sleep(3000);
                 c.connect(SERVER_ADDR, SERVER_PORT);
-                message = c.getNextMessage();
+                message = (ChatMessage) c.getNextMessage().getContent();
                 success = true;
             }
             catch (Exception ex) {
@@ -60,7 +61,7 @@ public class NetUtilityThreads {
         public void run() {
             s.waitForConnection();
             try {
-                message = s.getNextMessage();
+                message = (ChatMessage) s.getNextMessage().getContent();
                 success = true;
             }
             catch (Exception ex) {

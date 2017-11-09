@@ -20,7 +20,7 @@ public class MessagePacket implements Serializable {
         this._content = s;
 
         // create digest for message content
-        this._digest = genDigest(s);
+        this._digest = genDigest(this._content);
 
     }
 
@@ -29,7 +29,11 @@ public class MessagePacket implements Serializable {
     }
 
     public boolean checkMessageDigest() throws IOException {
-        return IntegrityChecking.checkDigest(this._digest, genDigest(this._content));
+        ByteArrayOutputStream byteOutStream = new ByteArrayOutputStream();
+        ObjectOutputStream oos = new ObjectOutputStream(byteOutStream);
+        oos.writeObject(this._content);
+
+        return IntegrityChecking.checkDigest(byteOutStream.toByteArray(), this._digest);
     }
 
     private byte[] genDigest(Serializable s) throws IOException {

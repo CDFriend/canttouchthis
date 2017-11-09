@@ -49,11 +49,17 @@ public class MessageMonitorThread extends Thread {
         this._alive = true;
         while (this._alive) {
             try {
-                ChatMessage m = this._session.getNextMessage();
+                MessagePacket packet = this._session.getNextMessage();
+                ChatMessage m = (ChatMessage) packet.getContent();
 
                 // check message identity against database
                 if (!(this._auth.verifyIdentity(m.senderIdent))){
                     this._ui.showWarning("Sender could not be verified!");
+                }
+
+                // check message digests
+                if (!(packet.checkMessageDigest())) {
+                    this._ui.showWarning("Digests do not match - message may have been intercepted!");
                 }
 
                 this._ui.addMessage(m);
