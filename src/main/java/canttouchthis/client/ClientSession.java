@@ -3,6 +3,7 @@ package canttouchthis.client;
 import canttouchthis.common.IChatSession;
 import canttouchthis.common.Message;
 import canttouchthis.common.KeyEstablishment;
+import canttouchthis.common.PublicKeyExchange;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -45,7 +46,7 @@ public class ClientSession implements IChatSession {
      *
      * @return Whether or not the connection was successful.
      */
-    public boolean connect(String addr, int port) throws UnknownHostException {
+    public boolean connect(String addr, int port, boolean useConf) throws UnknownHostException {
         this.addr = InetAddress.getByName(addr);
         this.port = port;
 
@@ -53,25 +54,28 @@ public class ClientSession implements IChatSession {
         Key privKey = es.getPrivateKey();
         Key pubKey = es.getPublicKey();
 
-        //encode keys
+        //encode public key
         byte[] pubByte = pubKey.getEncoded();
-        //System.out.println(pubKey.getFormat());
 
-        //String str = Base64.getEncoder().encodeToString(pubByte);
-        //System.out.println(str.length());
-        //System.out.println(str);
 
 
         try {
 
             this.connection = new Socket(this.addr, this.port);
 
+            if (useConf == true){
+              //if something, then call on public key exchange
+              int length = pubByte.length;
+              PublicKeyExchange pubKeyExchange = new PublicKeyExchange(pubKey, length, connection);
+              pubKeyExchange.sendPublicKey();
+              pubKeyExchange.receivePublicKey();
+              Key sharedSecret = pubKeyExchange.establishKeyAgreement(privKey);
 
+            }
             //send length
-            int length = pubByte.length;
 
-            //if something, then call on public key exchange
-            //PublicKeyExchange(pubKey, length)
+
+
 
             OutputStream socketOutputStream = connection.getOutputStream();
             DataOutputStream data = new DataOutputStream(socketOutputStream);
@@ -91,17 +95,9 @@ public class ClientSession implements IChatSession {
             //wait for server to send their public key byte[]
             InputStream serverInputStream = connection.getInputStream();
             DataInputStream dataIn = new DataInputStream(serverInputStream);
-
             int pubKeyLength = dataIn.readInt();
-            //System.out.println(pubKeyLength);
-
             byte[] serverPubKeyByte = new byte[pubKeyLength];
             dataIn.read(serverPubKeyByte, 0, pubKeyLength);
-
-
-            //String str = Base64.getEncoder().encodeToString(serverPubKeyByte);
-            //System.out.println(str.length());
-            //System.out.println(str);
 
 
             //rebuild the public key from the opposite side
@@ -117,8 +113,6 @@ public class ClientSession implements IChatSession {
             byte[] bytey = keyAgree.generateSecret();
 
             Key sharedSecret = new SecretKeySpec(bytey, 0, bytey.length, "AES");
-
-            //System.out.println(sharedSecret.getEncoded());
 
             socketOutputStream.flush();
 

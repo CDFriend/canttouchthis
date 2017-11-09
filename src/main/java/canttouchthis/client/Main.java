@@ -42,7 +42,7 @@ class Main {
 
                 // TODO: establish keys and encrypt messages. Beary insecure!
                 try {
-                    if (session.connect(host, port)) {
+                    if (session.connect(host, port, useConf)) {
                         // connection was successful
                         connectController.hideView();
                         conversationController.showView();
