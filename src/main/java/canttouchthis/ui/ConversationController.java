@@ -56,7 +56,15 @@ public class ConversationController implements ActionListener, KeyListener {
      */
     public void addMessage(Message m) {
         this._model.addMessage(m);
-        this._view.updateConversation();
+        this._view.renderMessage(m);
+    }
+
+    /**
+     * Shows a warning in the chat view.
+     * @param message Message to be shown to the user.
+     */
+    public void showWarning(String message) {
+        this._view.renderWarningMessage(message);
     }
 
     /**
@@ -85,8 +93,11 @@ public class ConversationController implements ActionListener, KeyListener {
         });
     }
 
-    public void showDisconnect() {
-        JOptionPane.showMessageDialog(this._view,"Other user disconnected!");
+    /**
+     * Show a message before closing the application.
+     */
+    public void showFatal(String msg) {
+        JOptionPane.showMessageDialog(this._view,msg);
         System.exit(0);
     }
 
@@ -118,15 +129,12 @@ public class ConversationController implements ActionListener, KeyListener {
     public void keyReleased(KeyEvent e) { }
 
     private void onSend() {
-        // TODO: make more descriptive identities
-        Message m = new Message("Alice", "Bob", System.currentTimeMillis(),
-                _view.sendField.getText());
+        Message m = new Message(_view.sendField.getText(), System.currentTimeMillis());
 
         // clear message field
         this._view.sendField.setText("");
 
-        // add message to UI and pass to handler
-        this.addMessage(m);
+        // pass to handler
         this.sendHandler.onMessageSend(m);
     }
 

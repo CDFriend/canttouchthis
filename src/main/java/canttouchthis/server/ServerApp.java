@@ -1,29 +1,41 @@
 package canttouchthis.server;
 
-import canttouchthis.common.Authenticator;
+import canttouchthis.common.auth.*;
 import canttouchthis.common.MessageMonitorThread;
 import canttouchthis.ui.*;
 
 import javax.swing.*;
 import java.sql.SQLException;
 
-class Main {
+class ServerApp {
+
+    private static final String DB_FILE = "auth_db.sqlite";
+
+    public ServerSession sess;
+
+    public Identity ident;
+    public Authenticator auth;
+
+    public LoginController loginController;
+    public ConversationController conversationController;
 
     public static void main(String[] args) {
 
+        ServerApp app = new ServerApp();
+
         // Start login and chat views
         LoginView lView = new LoginView("canttouchthis Server v1.0");
-        LoginController loginController = new LoginController(lView);
+        app.loginController = new LoginController(lView);
 
         ConversationModel conversationModel = new ConversationModel();
-        ConversationController conversationController =
-                new ConversationController(new ConversationView(conversationModel), conversationModel);
+        app.conversationController = new ConversationController(new ConversationView(conversationModel),
+                                                                conversationModel);
 
-        loginController.showView();
+        app.loginController.showView();
 
         // Setup server session
-        ServerSession session = new ServerSession();
-        WaitForConnectionDialog waitDialog = new WaitForConnectionDialog(session.getAddress(), session.port);
+        app.sess = new ServerSession();
+        WaitForConnectionDialog waitDialog = new WaitForConnectionDialog(app.sess.getAddress(), app.sess.port);
 
         /*
          * Shows a window saying that a connection is being established, waits for a connection
@@ -33,28 +45,31 @@ class Main {
             @Override
             public void run() {
                 waitDialog.setVisible(true);
-                session.waitForConnection();
+                app.sess.waitForConnection();
                 waitDialog.setVisible(false);
-                conversationController.showView();
+                app.conversationController.showView();
 
                 // once conversation starts, start message thread
-                MessageMonitorThread mm = new MessageMonitorThread(session, conversationController);
+                MessageMonitorThread mm = new MessageMonitorThread(app.sess,
+                                                                   app.conversationController,
+                                                                   app.ident,
+                                                                   app.auth);
                 mm.start();
             }
         });
 
-        String dbfile = "auth_db.sqlite";
         try {
-            Authenticator auth = new Authenticator(dbfile);
+            app.auth = new Authenticator(DB_FILE);
 
             // When login button clicked...
-            loginController.setLoginHandler(new ILoginHandler() {
+            app.loginController.setLoginHandler(new ILoginHandler() {
                 @Override
                 public String tryHandleLogin(String username, String password) {
 
                     try {
-                        if (auth.checkAuth(username, password, Authenticator.UserType.USERTYPE_SERVER)) {
-                            loginController.hideView();
+                        app.ident = app.auth.checkAuth(username, password, Authenticator.UserType.USERTYPE_SERVER);
+                        if (app.ident != null) {
+                            app.loginController.hideView();
                             waitForConThread.start();
                             return null;
                         } else {
@@ -69,7 +84,7 @@ class Main {
         }
         catch (SQLException ex) {
             JOptionPane.showMessageDialog(null,"Could not find authentication database: "
-                    + dbfile);
+                    + DB_FILE);
             return;
         }
 

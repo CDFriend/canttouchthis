@@ -1,5 +1,7 @@
 package canttouchthis.common;
 
+import canttouchthis.common.auth.Identity;
+
 import java.util.Date;
 import java.io.Serializable;
 
@@ -9,17 +11,28 @@ import java.io.Serializable;
  */
 public class Message implements Serializable {
 
-    public final String sender;
-    public final String reciever;
     public final Date timestamp;
     public final String message;
 
-    public Message(String from, String to, long ts, String msg) {
-        sender = from;
-        reciever = to;
+    public Identity senderIdent;
+
+    public Message(String msg, long ts) {
+        senderIdent = null;
         timestamp = new Date(ts);
         message = msg;
     }
 
+    public void setIdentity(Identity i) {
+        this.senderIdent = i;
+    }
+
+    public String getSenderName() {
+        if (this.senderIdent != null) {
+            return this.senderIdent.getUsername();
+        }
+        else {
+            return "UNKNOWN";
+        }
+    }
 
 }

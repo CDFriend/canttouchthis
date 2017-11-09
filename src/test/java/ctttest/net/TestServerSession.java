@@ -55,7 +55,7 @@ public class TestServerSession extends TestCase {
      */
     public void testMessageSerialization() throws UnknownHostException {
         // SETUP
-        Message m = new Message("Alice", "Bob", 0, "This is a test!!!");
+        Message m = new Message("This is a test!!!", 0);
         TryConnect conThread = new TryConnect(InetAddress.getLocalHost(), ServerSession.DEFAULT_PORT, true);
 
         // EXEC
@@ -80,8 +80,6 @@ public class TestServerSession extends TestCase {
 
         // VERIFY
         assertTrue(success);
-        assertEquals(m.sender, recv.sender);
-        assertEquals(m.reciever, recv.reciever);
         assertEquals(m.message, recv.message);
         assertTrue(m.timestamp.equals(recv.timestamp));
     }
