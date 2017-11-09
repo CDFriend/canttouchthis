@@ -9,14 +9,14 @@ import java.io.Serializable;
  * Container class for chat messages. This will likely change as more crypto
  * stuff gets added.
  */
-public class Message implements Serializable {
+public class ChatMessage implements Serializable {
 
     public final Date timestamp;
     public final String message;
 
     public Identity senderIdent;
 
-    public Message(String msg, long ts) {
+    public ChatMessage(String msg, long ts) {
         senderIdent = null;
         timestamp = new Date(ts);
         message = msg;

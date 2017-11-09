@@ -1,9 +1,6 @@
 package canttouchthis.client;
 
-import canttouchthis.common.CryptoServices;
-import canttouchthis.common.IChatSession;
-import canttouchthis.common.Message;
-import canttouchthis.common.KeyEstablishment;
+import canttouchthis.common.*;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -27,8 +24,6 @@ import javax.crypto.Cipher;
 import java.security.spec.InvalidKeySpecException;
 
 //test stuff
-
-import java.util.Base64;
 
 
 /**
@@ -151,12 +146,15 @@ public class ClientSession implements IChatSession {
     }
 
     /**
-     * Sends a Message object to the server.
+     * Sends a ChatMessage object to the server.
      *
-     * @param m Message to be sent.
+     * @param m ChatMessage to be sent.
      * @throws IOException If an error is encountered sending over the websocket.
      */
-    public void sendMessage(Message m) throws Exception {
+    public void sendMessage(ChatMessage m) throws Exception {
+
+        // pack ChatMessage into a MessagePacket (include digest)
+        MessagePacket packet = new MessagePacket(m);
 
         // initialize cipher
         Cipher c = (new CryptoServices()).getEncryptCipher(sharedSecret);
@@ -164,25 +162,28 @@ public class ClientSession implements IChatSession {
 
         // pipe object output into encryption cipher
         ObjectOutputStream oos = new ObjectOutputStream(cipherStream);
-        oos.writeObject(m);
+        oos.writeObject(packet);
 
     }
 
     /**
      * Blocks until a new message is received from the server.
      *
-     * @return New Message object from server.
+     * @return New ChatMessage object from server.
      * @throws IOException If an error is encountered reading from the websocket stream.
      */
-    public Message getNextMessage() throws Exception {
-
+    public MessagePacket getNextMessage() throws Exception {
         Cipher c = (new CryptoServices()).getDecryptCipher(sharedSecret);
         CipherInputStream cipherStream = new CipherInputStream(connection.getInputStream(), c);
         ObjectInputStream ois = new ObjectInputStream(cipherStream);
 
         try {
-            // TODO: what if we get sent an object that's not a Message?
-            return (Message) ois.readObject();
+            return (MessagePacket) ois.readObject();
+        }
+        catch (ClassCastException ex) {
+            System.out.printf("Got unexpected class from socket!");
+            ex.printStackTrace(System.err);
+            return null;
         }
         catch (ClassNotFoundException ex) {
             return null;

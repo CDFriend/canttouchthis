@@ -17,7 +17,7 @@ public class WaitForConnectionDialog extends JFrame {
     /**
      * Create a dialog showing that a server is waiting for a connection.
      *
-     * Message:
+     * ChatMessage:
      *   Waiting for connections...
      *   Host: ${HOSTNAME}:${PORT}
      *

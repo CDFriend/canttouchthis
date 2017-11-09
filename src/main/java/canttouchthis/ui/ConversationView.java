@@ -1,12 +1,10 @@
 package canttouchthis.ui;
 
-import canttouchthis.common.Message;
+import canttouchthis.common.ChatMessage;
 import java.awt.*;
 import java.text.SimpleDateFormat;
 import java.util.Iterator;
 import javax.swing.*;
-import javax.swing.text.SimpleAttributeSet;
-import javax.swing.text.StyleConstants;
 
 /**
  * Window for sending and recieving chat messages (client or server side).
@@ -99,7 +97,7 @@ public class ConversationView extends JFrame {
     public void updateConversation() {
         // re-render all messages
         chatPane.setText("");
-        Iterator<Message> i = model.messages();
+        Iterator<ChatMessage> i = model.messages();
         while (i.hasNext()) {
             renderMessage(i.next());
         }
@@ -107,7 +105,7 @@ public class ConversationView extends JFrame {
 
     /**
      * Render a warning to the chat view.
-     * @param message Message to be displayed after "WARNING: "
+     * @param message ChatMessage to be displayed after "WARNING: "
      */
     protected void renderWarningMessage(String message) {
         String rendered = "WARNING: " + message + "\n";
@@ -115,10 +113,10 @@ public class ConversationView extends JFrame {
     }
 
     /**
-     * Render a Message object to the view.
-     * @param m Message to be rendered.
+     * Render a ChatMessage object to the view.
+     * @param m ChatMessage to be rendered.
      */
-    protected void renderMessage(Message m) {
+    protected void renderMessage(ChatMessage m) {
         String rendered = String.format("[%s] %s: %s\n", date_format.format(m.timestamp),
                 m.getSenderName(), m.message);
 

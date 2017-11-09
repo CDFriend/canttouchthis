@@ -14,7 +14,7 @@ public class TestIntegrityChecking extends TestCase {
      */
     public void testLengthOfHash() {
 
-        byte[] hash = IntegrityChecking.generateMessageDigest(message);
+        byte[] hash = IntegrityChecking.generateMessageDigest(message.getBytes());
 
         assertEquals(32, hash.length);
 
@@ -25,8 +25,8 @@ public class TestIntegrityChecking extends TestCase {
      */
     public void testHashOfSameMessageIsSame() {
 
-        byte[] hash = IntegrityChecking.generateMessageDigest(message);
-        byte[] hash2 = IntegrityChecking.generateMessageDigest(message);
+        byte[] hash = IntegrityChecking.generateMessageDigest(message.getBytes());
+        byte[] hash2 = IntegrityChecking.generateMessageDigest(message.getBytes());
 
         assertTrue(MessageDigest.isEqual(hash, hash2));
 
@@ -34,8 +34,8 @@ public class TestIntegrityChecking extends TestCase {
 
     public void testHashOfDifferentMessageIsDifferent() {
 
-        byte[] hash = IntegrityChecking.generateMessageDigest(message);
-        byte[] hash2 = IntegrityChecking.generateMessageDigest(message + "; badstuff");
+        byte[] hash = IntegrityChecking.generateMessageDigest(message.getBytes());
+        byte[] hash2 = IntegrityChecking.generateMessageDigest((message + "; badstuff").getBytes());
 
         assertTrue(!MessageDigest.isEqual(hash, hash2));
 

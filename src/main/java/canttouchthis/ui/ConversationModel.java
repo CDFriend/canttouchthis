@@ -1,6 +1,7 @@
 package canttouchthis.ui;
 
-import canttouchthis.common.Message;
+import canttouchthis.common.ChatMessage;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -11,21 +12,21 @@ public class ConversationModel {
 
     private final int INITIAL_CAPACITY = 200;
 
-    private ArrayList<Message> messages;
+    private ArrayList<ChatMessage> messages;
 
     public ConversationModel() {
         messages = new ArrayList<>(INITIAL_CAPACITY);
     }
 
-    public void addMessage(Message m) {
+    public void addMessage(ChatMessage m) {
         messages.add(m);
     }
 
-    public Iterator<Message> messages() {
+    public Iterator<ChatMessage> messages() {
         return messages.iterator();
     }
 
-    public Message getLastMessage() {
+    public ChatMessage getLastMessage() {
         return messages.get(messages.size() - 1);
     }
 
