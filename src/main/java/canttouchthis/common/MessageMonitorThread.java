@@ -39,7 +39,7 @@ public class MessageMonitorThread extends Thread {
                     ui.addMessage(m);
                     session.sendMessage(m);
                 }
-                catch (IOException ex) {
+                catch (Exception ex) {
                     ex.printStackTrace(System.err);
                 }
             }
@@ -68,6 +68,10 @@ public class MessageMonitorThread extends Thread {
             catch (IOException ex) {
                 ex.printStackTrace(System.err);
                 this._ui.showFatal("Error in websocket transmission!");
+            }
+            catch (Exception ex) {
+                ex.printStackTrace(System.err);
+                this._ui.showFatal("An error occurred: " + ex.getMessage());
             }
         }
     }
