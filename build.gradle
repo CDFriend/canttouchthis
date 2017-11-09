@@ -59,6 +59,16 @@ task run_client(type:JavaExec) {
     classpath = sourceSets.main.runtimeClasspath
 }
 
+// Copy JAR dependencies
+task copyLibsToJar(type:Copy) {
+    def toDir = "build/libs/" + dependency_jars
+
+    file(toDir).mkdirs()
+
+    from configurations.compile
+    into toDir
+}
+
 // Generate JARs
 task server_jar(type:Jar) {
     from (sourceSets.main.output) {
@@ -66,8 +76,13 @@ task server_jar(type:Jar) {
         archiveName "canttouchthis-server-1.0.jar"
     }
 
+    from ('./') {
+        include "**/assets/*"
+        include "**/*.sqlite"
+    }
+
     manifest {
-        attributes "Main-Class" : "canttouchthis.server.Main"
+        attributes "Main-Class" : "canttouchthis.server.ServerApp"
     }
 }
 
@@ -77,10 +92,23 @@ task client_jar(type:Jar) {
         archiveName "canttouchthis-client-1.0.jar"
     }
 
+    from ('./') {
+        include "**/assets/*"
+        include "**/auth_db.sqlite"
+    }
+
     manifest {
-        attributes "Main-Class" : "canttouchthis.client.Main"
+        attributes (
+            "Main-Class" : "canttouchthis.client.ClientApp",
+
+            // Class path code from: https://oliverveits.wordpress.com/2016/11/15/how-to-build-a-lean-jar-file-with-gradle/
+            "Class-Path" : ". deps/" + configurations.compile.collect { it.getName() }.join(' deps/')
+        )
     }
 }
+
+server_jar.dependsOn copyLibsToJar
+client_jar.dependsOn copyLibsToJar
 
 task make_dist(type: Copy, dependsOn: [server_jar, client_jar]) {
     from ("./") {

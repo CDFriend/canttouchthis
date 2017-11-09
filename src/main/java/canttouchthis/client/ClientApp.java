@@ -65,6 +65,7 @@ class ClientApp {
             });
         }
         catch (java.sql.SQLException ex) {
+            ex.printStackTrace();
             JOptionPane.showMessageDialog(null,"Could not find authentication database: "
                     + DB_FILE);
             return;
