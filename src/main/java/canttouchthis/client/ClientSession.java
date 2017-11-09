@@ -8,6 +8,8 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
+import java.io.DataOutputStream;
+import java.io.DataInputStream;
 import java.io.InputStream;
 import java.net.InetAddress;
 import java.net.Socket;
@@ -20,12 +22,9 @@ import javax.crypto.spec.SecretKeySpec;
 //Exceptions
 import java.security.spec.InvalidKeySpecException;
 
+//test stuff
 
-
-import java.security.Provider;
-import java.security.Provider.Service;
-import java.security.Security;
-import java.util.Set;
+import java.util.Base64;
 
 
 /**
@@ -56,37 +55,58 @@ public class ClientSession implements IChatSession {
 
         //encode keys
         byte[] pubByte = pubKey.getEncoded();
-        //String pubFormat = pubKey.getFormat();
+        //System.out.println(pubKey.getFormat());
 
-        //System.out.println(pubFormat);
-/*
-        Provider [] providerList = Security.getProviders();
-    for (Provider provider : providerList)
-    {
-      System.out.println("Name: "  + provider.getName());
-      System.out.println("Information:\n" + provider.getInfo());
+        //String str = Base64.getEncoder().encodeToString(pubByte);
+        //System.out.println(str.length());
+        //System.out.println(str);
 
-      Set<Service> serviceList = provider.getServices();
-      for (Service service : serviceList)
-       {
-         System.out.println("Service Type: " + service.getType() + " Algorithm " + service.getAlgorithm());
-       }
-    }
-
-*/
 
         try {
+
             this.connection = new Socket(this.addr, this.port);
+
+
+            //send length
+            int length = pubByte.length;
+
+            //if something, then call on public key exchange
+            //PublicKeyExchange(pubKey, length)
+
             OutputStream socketOutputStream = connection.getOutputStream();
-            socketOutputStream.write(pubByte);
+            DataOutputStream data = new DataOutputStream(socketOutputStream);
+            data.writeInt(length);
+
+            socketOutputStream.flush();
+
+            //Create public key exchange object
+            //call for send
+
+            OutputStream socketStream = connection.getOutputStream();
+            DataOutputStream dataStream = new DataOutputStream(socketStream);
+            dataStream.write(pubByte, 0, pubByte.length);
+
+
 
             //wait for server to send their public key byte[]
             InputStream serverInputStream = connection.getInputStream();
-            byte[] serverPubKeyByte = new byte[2048];
-            int q = serverInputStream.read(serverPubKeyByte);
+            DataInputStream dataIn = new DataInputStream(serverInputStream);
+
+            int pubKeyLength = dataIn.readInt();
+            System.out.println(pubKeyLength);
+
+            byte[] serverPubKeyByte = new byte[pubKeyLength];
+            dataIn.read(serverPubKeyByte, 0, pubKeyLength);
+
+
+            String str = Base64.getEncoder().encodeToString(serverPubKeyByte);
+            System.out.println(str.length());
+            System.out.println(str);
+
 
             //rebuild the public key from the opposite side
-            Key serverPublicKey = KeyFactory.getInstance("DiffieHellman").generatePublic(new X509EncodedKeySpec(serverPubKeyByte));
+            X509EncodedKeySpec x509spec = new X509EncodedKeySpec(serverPubKeyByte);
+            Key serverPublicKey = KeyFactory.getInstance("DiffieHellman").generatePublic(x509spec);
 
             //establish KeyAgreement - SunJCE
             KeyAgreement keyAgree = KeyAgreement.getInstance("DiffieHellman");
@@ -97,6 +117,8 @@ public class ClientSession implements IChatSession {
             byte[] bytey = keyAgree.generateSecret();
 
             Key sharedSecret = new SecretKeySpec(bytey, 0, bytey.length, "AES");
+
+            System.out.println(sharedSecret.getEncoded());
 
             socketOutputStream.flush();
 

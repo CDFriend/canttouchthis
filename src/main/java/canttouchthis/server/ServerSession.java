@@ -9,6 +9,8 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.io.InputStream;
+import java.io.DataOutputStream;
+import java.io.DataInputStream;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -22,6 +24,11 @@ import javax.crypto.spec.SecretKeySpec;
 
 //Exceptions
 import java.security.spec.InvalidKeySpecException;
+
+//test
+import java.util.Base64;
+
+
 
 /**
  * Handles sending and recieving Message objects and key exchange on the
@@ -83,21 +90,54 @@ public class ServerSession implements IChatSession {
         byte[] pubByte = pubKey.getEncoded();
 
         try {
+
             server = new ServerSocket(port);
             s = server.accept();
+            //Create public key exchange object
+            //call for send
+            //call for listen
+
 
             //receive client pub key in form of byte[]
             InputStream serverInputStream = s.getInputStream();
-            byte[] clientPubKeyByte = new byte[2048];
-            int q = serverInputStream.read(clientPubKeyByte);
+            DataInputStream dataIn = new DataInputStream(serverInputStream);
+            int pubKeyLength = dataIn.readInt();
+            byte[] clientPubKeyByte = new byte[pubKeyLength];
+            dataIn.read(clientPubKeyByte, 0, pubKeyLength);
+
+            //rebuild the public key from the opposite side
+            KeyFactory fact = KeyFactory.getInstance("DH");
+
+            Key clientPublicKey = fact.generatePublic(new X509EncodedKeySpec(clientPubKeyByte));
+
+//            String str = Base64.getEncoder().encodeToString(clientPubKeyByte);
+//            System.out.println(str.length());
+//            System.out.println(str);
+
+
+
+            //send our own length over
+            OutputStream socketLengthStream = s.getOutputStream();
+            DataOutputStream dataOut = new DataOutputStream(socketLengthStream);
+
+            System.out.println(pubByte.length);
+
+
+            dataOut.writeInt(pubByte.length);
+            //too soon? overwriting the write with 0?
+            //socketLengthStream.flush();
+
+            String str = Base64.getEncoder().encodeToString(pubByte);
+            System.out.println(str.length());
+            System.out.println(str);
+
+
 
             //Send our own pub key byte[]
             OutputStream socketOutputStream = s.getOutputStream();
-            socketOutputStream.write(pubByte);
+            DataOutputStream data = new DataOutputStream(socketOutputStream);
+            data.write(pubByte, 0, pubByte.length);
 
-            //rebuild the public key from the opposite side
-            Key clientPublicKey = KeyFactory.getInstance("DiffieHellman").generatePublic(new X509EncodedKeySpec(clientPubKeyByte));
-            //System.out.println(String(clientPubKeyByte));
 
             //establish KeyAgreement
             KeyAgreement keyAgree = KeyAgreement.getInstance("DiffieHellman");
@@ -110,6 +150,8 @@ public class ServerSession implements IChatSession {
             byte[] bytey = keyAgree.generateSecret();
 
             Key sharedSecret = new SecretKeySpec(bytey, 0, bytey.length, "AES");
+
+            System.out.println(sharedSecret.getEncoded());
 
             socketOutputStream.flush();
 
