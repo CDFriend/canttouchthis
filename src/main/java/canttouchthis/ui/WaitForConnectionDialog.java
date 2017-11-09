@@ -35,12 +35,18 @@ public class WaitForConnectionDialog extends JFrame {
         GridBagConstraints c = new GridBagConstraints();
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
+        getRootPane().setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
+
         c.gridy = 0;
+        c.ipadx = 5;
+        c.ipady = 3;
         c.anchor = GridBagConstraints.WEST;
         Container pane = this.getContentPane();
         pane.add(new JLabel("Waiting for connections..."), c);
 
         c.gridy = 1;
+        c.ipadx = 5;
+        c.ipady = 3;
         c.anchor = GridBagConstraints.WEST;
         JLabel hostLabel = new JLabel("Host: " + _host + ":" + _port);
         pane.add(hostLabel, c);

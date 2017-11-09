@@ -1,5 +1,8 @@
 apply plugin: 'java'
 
+sourceCompatibility='1.8'
+targetCompatibility='1.8'
+
 repositories {
     mavenCentral()
 }
@@ -37,6 +40,12 @@ test {
         events "passed", "failed", "skipped"
         showStandardStreams = true
     }
+}
+
+// Remove dist folder during clean (NOTE: requires admin permissions!)
+clean.doFirst {
+    delete dist_folder
+    println("Deleting " + dist_folder)
 }
 
 // Custom build tasks

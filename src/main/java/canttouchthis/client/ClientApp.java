@@ -27,7 +27,8 @@ class ClientApp {
         app.sess = new ClientSession();
 
         // Setup login view
-        app.loginController = new LoginController(new LoginView());
+        LoginView lView = new LoginView("canttouchthis Client v1.0");
+        app.loginController = new LoginController(lView);
 
         // Setup connection view
         app.connectController = new ConnectController(new ConnectView());

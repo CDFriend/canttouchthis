@@ -24,7 +24,8 @@ class ServerApp {
         ServerApp app = new ServerApp();
 
         // Start login and chat views
-        app.loginController = new LoginController(new LoginView());
+        LoginView lView = new LoginView("canttouchthis Server v1.0");
+        app.loginController = new LoginController(lView);
 
         ConversationModel conversationModel = new ConversationModel();
         app.conversationController = new ConversationController(new ConversationView(conversationModel),
