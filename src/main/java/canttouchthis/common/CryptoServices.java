@@ -36,7 +36,7 @@ public class CryptoServices {
      * @param key Key passed to method to encrypt under.
      * @throws Exception For all possible exceptions (i.e. invalid key, bad padding, etc.)
      */
-    public byte[] encryptSymmetric(String plaintext, Key key) throws Exception {
+    public byte[] encryptSymmetric(byte[] plaintext, Key key) throws Exception {
         byte ptBytes[] = plaintext.getBytes();
 
         Cipher c = Cipher.getInstance("AES/CBC/PKCS5Padding");
