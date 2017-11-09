@@ -1,12 +1,11 @@
 package ctttest.net;
 
+import canttouchthis.common.ChatMessage;
 import ctttest.net.NetUtilityThreads.*;
 
-import canttouchthis.common.Message;
 import canttouchthis.client.ClientSession;
 import canttouchthis.server.ServerSession;
 
-import java.io.IOException;
 import java.net.UnknownHostException;
 
 import junit.framework.*;
@@ -25,7 +24,7 @@ public class TestClientServerConnection extends TestCase {
         // SETUP
         ServerSession s = new ServerSession();
         ClientSession c = new ClientSession();
-        Message m = new Message("This is a test!!!", 0);
+        ChatMessage m = new ChatMessage("This is a test!!!", 0);
 
         // EXEC
         TryRecieveMessageClient cThread = new TryRecieveMessageClient(c);
@@ -40,7 +39,7 @@ public class TestClientServerConnection extends TestCase {
             assertTrue("Exception when sending message!", false);
         }
 
-        Message recv = cThread.message;
+        ChatMessage recv = cThread.message;
 
         // VERIFY
         assertTrue("Error running client thread!", cThread.success);
@@ -49,7 +48,7 @@ public class TestClientServerConnection extends TestCase {
     }
 
     /**
-     * Checks that a ServerSession can send a Message to a ClientSession.
+     * Checks that a ServerSession can send a ChatMessage to a ClientSession.
      *
      * @throws UnknownHostException If localhost cannot be found.
      */
@@ -57,7 +56,7 @@ public class TestClientServerConnection extends TestCase {
         // SETUP
         ServerSession s = new ServerSession();
         ClientSession c = new ClientSession();
-        Message m = new Message("This is a test!!!", 0);
+        ChatMessage m = new ChatMessage("This is a test!!!", 0);
 
         // EXEC
         TryRecieveMessageServer sThread = new TryRecieveMessageServer(s);
@@ -72,7 +71,7 @@ public class TestClientServerConnection extends TestCase {
             assertTrue("Exception when sending message!", false);
         }
 
-        Message recv = sThread.message;
+        ChatMessage recv = sThread.message;
 
         // VERIFY
         assertTrue("Error running client thread!", sThread.success);

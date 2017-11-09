@@ -1,6 +1,6 @@
 package ctttest.common;
 
-import canttouchthis.common.Message;
+import canttouchthis.common.ChatMessage;
 import canttouchthis.common.CryptoServices;
 
 import java.io.ObjectOutputStream;
@@ -49,7 +49,7 @@ public class TestCryptoServices extends TestCase {
         Key key = keyGen.generateKey();
 
         // Create generic message
-        Message m = new Message("I am a walrus.", 12);
+        ChatMessage m = new ChatMessage("I am a walrus.", 12);
 
         // Create two pipelines: one uses the encryption cipher, one doesn't
         ByteArrayOutputStream byteStreamNoEncrypt = new ByteArrayOutputStream();

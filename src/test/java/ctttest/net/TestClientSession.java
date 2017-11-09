@@ -63,7 +63,7 @@ public class TestClientSession extends TestCase {
 /*
     public void testMessageSerialization() {
         // SETUP
-        Message m = new Message("This is a test!!!", 0);
+        ChatMessage m = new ChatMessage("This is a test!!!", 0);
         WaitForConnection server = new WaitForConnection(50000, true);
         server.start();
 
@@ -79,7 +79,7 @@ public class TestClientSession extends TestCase {
             success = false;
         }
 
-        Message recv = server.message;
+        ChatMessage recv = server.message;
 
         // VERIFY
         assertTrue(success);

@@ -1,7 +1,7 @@
 package ctttest.net;
 
 import canttouchthis.client.ClientSession;
-import canttouchthis.common.Message;
+import canttouchthis.common.ChatMessage;
 import canttouchthis.server.ServerSession;
 
 import java.io.ObjectInputStream;
@@ -23,7 +23,7 @@ public class NetUtilityThreads {
      */
     protected static class TryRecieveMessageClient extends Thread {
         ClientSession c;
-        Message message = null;
+        ChatMessage message = null;
         boolean success = false;
 
         public TryRecieveMessageClient(ClientSession c) {
@@ -46,11 +46,11 @@ public class NetUtilityThreads {
 
     /**
      * Starts a ServerSession and waits for a client to connect. Then, waits for the
-     * ClientSession to send a Message.
+     * ClientSession to send a ChatMessage.
      */
     protected static class TryRecieveMessageServer extends Thread {
         ServerSession s;
-        Message message = null;
+        ChatMessage message = null;
         boolean success = false;
 
         public TryRecieveMessageServer(ServerSession s) {
@@ -72,11 +72,11 @@ public class NetUtilityThreads {
 
     /**
      * Generic websocket server (not ServerSession). Starts the server, waits for a connection
-     * and (optionally) waits to receive a Message.
+     * and (optionally) waits to receive a ChatMessage.
      */
     protected static class WaitForConnection extends Thread {
         int port;
-        Message message;
+        ChatMessage message;
         boolean success = false;
         boolean tryReadMessage;
 
@@ -92,7 +92,7 @@ public class NetUtilityThreads {
 
                 if (tryReadMessage) {
                     ObjectInputStream ois = new ObjectInputStream(sock.getInputStream());
-                    message = (Message) ois.readObject();
+                    message = (ChatMessage) ois.readObject();
                 }
 
                 s.close();
@@ -115,7 +115,7 @@ public class NetUtilityThreads {
         InetAddress addr;
         int port;
         boolean tryReadMessage;
-        Message message = null;
+        ChatMessage message = null;
 
         boolean success;
 
@@ -134,7 +134,7 @@ public class NetUtilityThreads {
                 // try to get a message from the server
                 if (tryReadMessage) {
                     ObjectInputStream ois = new ObjectInputStream(s.getInputStream());
-                    message = (Message) ois.readObject();
+                    message = (ChatMessage) ois.readObject();
                 }
 
                 s.close();

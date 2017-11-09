@@ -57,7 +57,7 @@ public class TestServerSession extends TestCase {
      */
 /*    public void testMessageSerialization() throws UnknownHostException {
         // SETUP
-        Message m = new Message("This is a test!!!", 0);
+        ChatMessage m = new ChatMessage("This is a test!!!", 0);
         TryConnect conThread = new TryConnect(InetAddress.getLocalHost(), ServerSession.DEFAULT_PORT, true);
 
         // EXEC
@@ -78,7 +78,7 @@ public class TestServerSession extends TestCase {
             assertTrue("Connection thread interrupted!", false);
         }
 
-        Message recv = conThread.message;
+        ChatMessage recv = conThread.message;
 
         // VERIFY
         assertTrue(success);

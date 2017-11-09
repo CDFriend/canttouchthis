@@ -10,7 +10,7 @@ public class IntegrityChecking {
     /**
      * Generates a SHA-256 digest hash for a given message.
      *
-     * @param msg Message to create digest for.
+     * @param msg ChatMessage to create digest for.
      * @return Byte sequence representing the hash.
      */
     public static byte[] generateMessageDigest(String msg) {
@@ -33,7 +33,7 @@ public class IntegrityChecking {
      * If this function returns false, the message was likely modified in
      * transit.
      *
-     * @param msg Message text.
+     * @param msg ChatMessage text.
      * @param providedDigest SHA-256 digest provided along with the message.
      * @return Whether or not the hashed text and its provided digest match.
      */

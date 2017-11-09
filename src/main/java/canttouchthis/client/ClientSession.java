@@ -1,8 +1,8 @@
 package canttouchthis.client;
 
+import canttouchthis.common.ChatMessage;
 import canttouchthis.common.CryptoServices;
 import canttouchthis.common.IChatSession;
-import canttouchthis.common.Message;
 import canttouchthis.common.KeyEstablishment;
 
 import java.io.IOException;
@@ -27,8 +27,6 @@ import javax.crypto.Cipher;
 import java.security.spec.InvalidKeySpecException;
 
 //test stuff
-
-import java.util.Base64;
 
 
 /**
@@ -151,12 +149,12 @@ public class ClientSession implements IChatSession {
     }
 
     /**
-     * Sends a Message object to the server.
+     * Sends a ChatMessage object to the server.
      *
-     * @param m Message to be sent.
+     * @param m ChatMessage to be sent.
      * @throws IOException If an error is encountered sending over the websocket.
      */
-    public void sendMessage(Message m) throws Exception {
+    public void sendMessage(ChatMessage m) throws Exception {
 
         // initialize cipher
         Cipher c = (new CryptoServices()).getEncryptCipher(sharedSecret);
@@ -171,18 +169,18 @@ public class ClientSession implements IChatSession {
     /**
      * Blocks until a new message is received from the server.
      *
-     * @return New Message object from server.
+     * @return New ChatMessage object from server.
      * @throws IOException If an error is encountered reading from the websocket stream.
      */
-    public Message getNextMessage() throws Exception {
+    public ChatMessage getNextMessage() throws Exception {
 
         Cipher c = (new CryptoServices()).getDecryptCipher(sharedSecret);
         CipherInputStream cipherStream = new CipherInputStream(connection.getInputStream(), c);
         ObjectInputStream ois = new ObjectInputStream(cipherStream);
 
         try {
-            // TODO: what if we get sent an object that's not a Message?
-            return (Message) ois.readObject();
+            // TODO: what if we get sent an object that's not a ChatMessage?
+            return (ChatMessage) ois.readObject();
         }
         catch (ClassNotFoundException ex) {
             return null;

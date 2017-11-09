@@ -1,6 +1,6 @@
 package canttouchthis.ui;
 
-import canttouchthis.common.Message;
+import canttouchthis.common.ChatMessage;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -43,7 +43,7 @@ public class ConversationController implements ActionListener, KeyListener {
     /**
      * Sets a handler for a message send event from the UI.
      *
-     * @param sendHandler ISendHandler object which processes a Message object.
+     * @param sendHandler ISendHandler object which processes a ChatMessage object.
      */
     public void setSendHandler(ISendHandler sendHandler) {
         this.sendHandler = sendHandler;
@@ -54,14 +54,14 @@ public class ConversationController implements ActionListener, KeyListener {
      *
      * @param m New message to be added.
      */
-    public void addMessage(Message m) {
+    public void addMessage(ChatMessage m) {
         this._model.addMessage(m);
         this._view.renderMessage(m);
     }
 
     /**
      * Shows a warning in the chat view.
-     * @param message Message to be shown to the user.
+     * @param message ChatMessage to be shown to the user.
      */
     public void showWarning(String message) {
         this._view.renderWarningMessage(message);
@@ -129,7 +129,7 @@ public class ConversationController implements ActionListener, KeyListener {
     public void keyReleased(KeyEvent e) { }
 
     private void onSend() {
-        Message m = new Message(_view.sendField.getText(), System.currentTimeMillis());
+        ChatMessage m = new ChatMessage(_view.sendField.getText(), System.currentTimeMillis());
 
         // clear message field
         this._view.sendField.setText("");

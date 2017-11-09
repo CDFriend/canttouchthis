@@ -1,7 +1,7 @@
 package canttouchthis.server;
 
+import canttouchthis.common.ChatMessage;
 import canttouchthis.common.CryptoServices;
-import canttouchthis.common.Message;
 import canttouchthis.common.IChatSession;
 import canttouchthis.common.KeyEstablishment;
 
@@ -30,12 +30,10 @@ import javax.crypto.Cipher;
 import java.security.spec.InvalidKeySpecException;
 
 //test
-import java.util.Base64;
-
 
 
 /**
- * Handles sending and recieving Message objects and key exchange on the
+ * Handles sending and recieving ChatMessage objects and key exchange on the
  * server side.
  */
 public class ServerSession implements IChatSession {
@@ -192,10 +190,10 @@ public class ServerSession implements IChatSession {
     /**
      * Sends a message object to the connected ClientSession.
      *
-     * @param m Message object to be sent.
+     * @param m ChatMessage object to be sent.
      * @throws IOException If an error occurs when writing the message to the websocket channel.
      */
-    public void sendMessage(Message m) throws Exception {
+    public void sendMessage(ChatMessage m) throws Exception {
 
         // initialize encryption cipher
         Cipher c = (new CryptoServices()).getEncryptCipher(sharedSecret);
@@ -208,20 +206,20 @@ public class ServerSession implements IChatSession {
     }
 
     /**
-     * Blocks until a new Message object is received from the client.
+     * Blocks until a new ChatMessage object is received from the client.
      *
-     * @return Message from the ClientSession.
+     * @return ChatMessage from the ClientSession.
      * @throws IOException If any errors occur when getting the socket input stream.
      */
-    public Message getNextMessage() throws Exception {
+    public ChatMessage getNextMessage() throws Exception {
         Cipher c = (new CryptoServices()).getDecryptCipher(sharedSecret);
         CipherInputStream cipherStream = new CipherInputStream(channel.getInputStream(), c);
 
         ObjectInputStream ois = new ObjectInputStream(cipherStream);
 
         try {
-            // TODO: what if we get sent an object that's not a Message?
-            return (Message) ois.readObject();
+            // TODO: what if we get sent an object that's not a ChatMessage?
+            return (ChatMessage) ois.readObject();
         }
         catch (ClassNotFoundException ex) {
             return null;

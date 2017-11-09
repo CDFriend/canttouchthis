@@ -33,7 +33,7 @@ public class MessageMonitorThread extends Thread {
         ConversationController ui = this._ui;
         this._ui.setSendHandler(new ISendHandler() {
             @Override
-            public void onMessageSend(Message m) {
+            public void onMessageSend(ChatMessage m) {
                 try {
                     m.setIdentity(ident);
                     ui.addMessage(m);
@@ -49,7 +49,7 @@ public class MessageMonitorThread extends Thread {
         this._alive = true;
         while (this._alive) {
             try {
-                Message m = this._session.getNextMessage();
+                ChatMessage m = this._session.getNextMessage();
 
                 // check message identity against database
                 if (!(this._auth.verifyIdentity(m.senderIdent))){
