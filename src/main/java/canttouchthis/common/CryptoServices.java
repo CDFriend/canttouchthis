@@ -36,6 +36,8 @@ public class CryptoServices {
     public Cipher getEncryptCipher(Key key) throws Exception {
         Cipher c = Cipher.getInstance("AES/CBC/PKCS5Padding");
         c.init(Cipher.ENCRYPT_MODE, key, ivspec);
+
+        return c;
     }
 
 
@@ -48,6 +50,8 @@ public class CryptoServices {
     public Cipher getDecryptCipher(Key key) throws Exception {
         Cipher c = Cipher.getInstance("AES/CBC/PKCS5Padding");
         c.init(Cipher.DECRYPT_MODE, key, ivspec);
+
+        return c;
     }
 
 
@@ -64,7 +68,7 @@ public class CryptoServices {
         byte[] ciphertext = new byte[c.getOutputSize(plaintext.length)];
         c.doFinal(plaintext, 0, plaintext.length, ciphertext);
 
-        return c;
+        return ciphertext;
     }
 
     /**
