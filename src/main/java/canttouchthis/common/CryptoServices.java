@@ -19,14 +19,12 @@ public class CryptoServices {
      * for initialization vector for use in encryption/decryption with Cipher
      */
     public SecureRandom randomIVGenerator;
-    public byte[] iv;
     public IvParameterSpec ivspec;
 
     public CryptoServices() {
-        this.randomIVGenerator = new SecureRandom();
-        this.iv = new byte[16];
-        randomIVGenerator.nextBytes(iv);
-        this.ivspec = new IvParameterSpec(iv);
+        byte[] ivbytes = { 0x00, 0x1a, 0x0f, 0x10, 0x44, 0x5c, 0x2d, 0x7c,
+                            0x22, 0x4f, 0x3a, 0x7c, 0x6a, 0x22, 0x1f, 0x13 };
+        this.ivspec = new IvParameterSpec(ivbytes);
     }
 
     /**
