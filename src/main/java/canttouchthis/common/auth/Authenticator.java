@@ -49,7 +49,8 @@ public class Authenticator {
         if (s.next()) {
 
             // SHA-256 hash of password should match value in database.
-            String reqHash = Base64.getEncoder().encodeToString(IntegrityChecking.generateMessageDigest(password));
+            String reqHash = Base64.getEncoder()
+                    .encodeToString(IntegrityChecking.generateMessageDigest(password.getBytes()));
             String dbHash = s.getString(1);
 
             if (reqHash.equals(dbHash)) {

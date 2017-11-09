@@ -13,7 +13,7 @@ public class IntegrityChecking {
      * @param msg ChatMessage to create digest for.
      * @return Byte sequence representing the hash.
      */
-    public static byte[] generateMessageDigest(String msg) {
+    public static byte[] generateMessageDigest(byte[] msg) {
 
         MessageDigest algo;
         try {
@@ -24,7 +24,7 @@ public class IntegrityChecking {
             return null;
         }
 
-        return algo.digest(msg.getBytes());
+        return algo.digest(msg);
 
     }
 
@@ -37,7 +37,7 @@ public class IntegrityChecking {
      * @param providedDigest SHA-256 digest provided along with the message.
      * @return Whether or not the hashed text and its provided digest match.
      */
-    public static boolean checkDigest(String msg, byte[] providedDigest) {
+    public static boolean checkDigest(byte[] msg, byte[] providedDigest) {
 
         // Generate a digest for the String message. This should be the same
         // as the provided digest if the message has not been modified.
