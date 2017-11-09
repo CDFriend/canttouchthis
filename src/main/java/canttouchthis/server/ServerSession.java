@@ -1,9 +1,6 @@
 package canttouchthis.server;
 
-import canttouchthis.common.ChatMessage;
-import canttouchthis.common.CryptoServices;
-import canttouchthis.common.IChatSession;
-import canttouchthis.common.KeyEstablishment;
+import canttouchthis.common.*;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -195,13 +192,16 @@ public class ServerSession implements IChatSession {
      */
     public void sendMessage(ChatMessage m) throws Exception {
 
+        // pack ChatMessage into MessagePacket (include Digest)
+        MessagePacket packet = new MessagePacket(m);
+
         // initialize encryption cipher
         Cipher c = (new CryptoServices()).getEncryptCipher(sharedSecret);
         CipherOutputStream cipherStream = new CipherOutputStream(channel.getOutputStream(), c);
 
         // initialize pipe and write to object output stream
         ObjectOutputStream oos = new ObjectOutputStream(cipherStream);
-        oos.writeObject(m);
+        oos.writeObject(packet);
 
     }
 
@@ -218,8 +218,12 @@ public class ServerSession implements IChatSession {
         ObjectInputStream ois = new ObjectInputStream(cipherStream);
 
         try {
-            // TODO: what if we get sent an object that's not a ChatMessage?
-            return (ChatMessage) ois.readObject();
+            return (ChatMessage) ((MessagePacket) ois.readObject()).getContent();
+        }
+        catch (ClassCastException ex) {
+            System.out.printf("Got unexpected class from socket!");
+            ex.printStackTrace(System.err);
+            return null;
         }
         catch (ClassNotFoundException ex) {
             return null;

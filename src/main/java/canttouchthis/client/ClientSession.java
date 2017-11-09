@@ -1,9 +1,6 @@
 package canttouchthis.client;
 
-import canttouchthis.common.ChatMessage;
-import canttouchthis.common.CryptoServices;
-import canttouchthis.common.IChatSession;
-import canttouchthis.common.KeyEstablishment;
+import canttouchthis.common.*;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -156,13 +153,16 @@ public class ClientSession implements IChatSession {
      */
     public void sendMessage(ChatMessage m) throws Exception {
 
+        // pack ChatMessage into a MessagePacket (include digest)
+        MessagePacket packet = new MessagePacket(m);
+
         // initialize cipher
         Cipher c = (new CryptoServices()).getEncryptCipher(sharedSecret);
         CipherOutputStream cipherStream = new CipherOutputStream(connection.getOutputStream(), c);
 
         // pipe object output into encryption cipher
         ObjectOutputStream oos = new ObjectOutputStream(cipherStream);
-        oos.writeObject(m);
+        oos.writeObject(packet);
 
     }
 
@@ -173,14 +173,17 @@ public class ClientSession implements IChatSession {
      * @throws IOException If an error is encountered reading from the websocket stream.
      */
     public ChatMessage getNextMessage() throws Exception {
-
         Cipher c = (new CryptoServices()).getDecryptCipher(sharedSecret);
         CipherInputStream cipherStream = new CipherInputStream(connection.getInputStream(), c);
         ObjectInputStream ois = new ObjectInputStream(cipherStream);
 
         try {
-            // TODO: what if we get sent an object that's not a ChatMessage?
-            return (ChatMessage) ois.readObject();
+            return (ChatMessage) ((MessagePacket) ois.readObject()).getContent();
+        }
+        catch (ClassCastException ex) {
+            System.out.printf("Got unexpected class from socket!");
+            ex.printStackTrace(System.err);
+            return null;
         }
         catch (ClassNotFoundException ex) {
             return null;

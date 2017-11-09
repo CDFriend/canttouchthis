@@ -24,6 +24,10 @@ public class MessagePacket implements Serializable {
 
     }
 
+    public Serializable getContent() {
+        return this._content;
+    }
+
     public boolean checkMessageDigest() throws IOException {
         return IntegrityChecking.checkDigest(this._digest, genDigest(this._content));
     }
