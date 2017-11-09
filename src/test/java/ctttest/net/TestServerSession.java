@@ -1,4 +1,4 @@
-package ctttest.net;
+/*package ctttest.net;
 
 import ctttest.net.NetUtilityThreads.*;
 
@@ -10,10 +10,11 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 
 import junit.framework.*;
-
+*/
 /**
  * Tests the ServerSession object against a generic websocket client.
  */
+ /*
 public class TestServerSession extends TestCase {
 
     ServerSession session;
@@ -31,6 +32,7 @@ public class TestServerSession extends TestCase {
      * Server should accept incoming connections.
      * @throws UnknownHostException If localhost cannot be found.
      */
+     /*
     public void testServerAcceptsConnection() throws UnknownHostException {
 
         InetAddress addr = InetAddress.getLocalHost();
@@ -49,11 +51,11 @@ public class TestServerSession extends TestCase {
         assertTrue(success);
 
     }
-
+*/
     /**
      * Checks that messages are serialized properly and can be read by a client.
      */
-    public void testMessageSerialization() throws UnknownHostException {
+/*    public void testMessageSerialization() throws UnknownHostException {
         // SETUP
         Message m = new Message("This is a test!!!", 0);
         TryConnect conThread = new TryConnect(InetAddress.getLocalHost(), ServerSession.DEFAULT_PORT, true);
@@ -85,3 +87,4 @@ public class TestServerSession extends TestCase {
     }
 
 }
+*/
