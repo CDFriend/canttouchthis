@@ -120,17 +120,16 @@ public class ServerSession implements IChatSession {
             OutputStream socketLengthStream = s.getOutputStream();
             DataOutputStream dataOut = new DataOutputStream(socketLengthStream);
 
-            System.out.println(pubByte.length);
+            //System.out.println(pubByte.length);
 
 
             dataOut.writeInt(pubByte.length);
             //too soon? overwriting the write with 0?
-            //socketLengthStream.flush();
+            socketLengthStream.flush();
 
-            String str = Base64.getEncoder().encodeToString(pubByte);
-            System.out.println(str.length());
-            System.out.println(str);
-
+            //String str = Base64.getEncoder().encodeToString(pubByte);
+            //System.out.println(str.length());
+            //System.out.println(str);
 
 
             //Send our own pub key byte[]
@@ -151,7 +150,7 @@ public class ServerSession implements IChatSession {
 
             Key sharedSecret = new SecretKeySpec(bytey, 0, bytey.length, "AES");
 
-            System.out.println(sharedSecret.getEncoded());
+            //System.out.println(sharedSecret.getEncoded());
 
             socketOutputStream.flush();
 

@@ -93,15 +93,15 @@ public class ClientSession implements IChatSession {
             DataInputStream dataIn = new DataInputStream(serverInputStream);
 
             int pubKeyLength = dataIn.readInt();
-            System.out.println(pubKeyLength);
+            //System.out.println(pubKeyLength);
 
             byte[] serverPubKeyByte = new byte[pubKeyLength];
             dataIn.read(serverPubKeyByte, 0, pubKeyLength);
 
 
-            String str = Base64.getEncoder().encodeToString(serverPubKeyByte);
-            System.out.println(str.length());
-            System.out.println(str);
+            //String str = Base64.getEncoder().encodeToString(serverPubKeyByte);
+            //System.out.println(str.length());
+            //System.out.println(str);
 
 
             //rebuild the public key from the opposite side
@@ -118,7 +118,7 @@ public class ClientSession implements IChatSession {
 
             Key sharedSecret = new SecretKeySpec(bytey, 0, bytey.length, "AES");
 
-            System.out.println(sharedSecret.getEncoded());
+            //System.out.println(sharedSecret.getEncoded());
 
             socketOutputStream.flush();
 

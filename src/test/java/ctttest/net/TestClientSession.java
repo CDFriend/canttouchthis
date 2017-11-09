@@ -1,4 +1,4 @@
-package ctttest.net;
+/*package ctttest.net;
 
 import ctttest.net.NetUtilityThreads.*;
 
@@ -9,10 +9,11 @@ import java.net.UnknownHostException;
 
 import canttouchthis.common.Message;
 import junit.framework.*;
-
+*/
 /**
  * Tests the ClientSession object against a generic websocket server.
  */
+/*
 public class TestClientSession extends TestCase {
 
     ClientSession sess;
@@ -33,6 +34,7 @@ public class TestClientSession extends TestCase {
     /**
      * Checks that the client can connect to the generic server.
      */
+     /*
     public void testClientConnectsToServer() {
         // SETUP
         WaitForConnection server = new WaitForConnection(50000, false);
@@ -53,10 +55,12 @@ public class TestClientSession extends TestCase {
         assertTrue(success);
         assertTrue(server.success);
     }
-
+*/
     /**
      * Checks that messages coming from the ClientSession can be deserialized after transmission.
      */
+
+/*
     public void testMessageSerialization() {
         // SETUP
         Message m = new Message("Alice", "Bob", 0, "This is a test!!!");
@@ -87,3 +91,4 @@ public class TestClientSession extends TestCase {
     }
 
 }
+*/
