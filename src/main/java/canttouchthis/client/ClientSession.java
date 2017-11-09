@@ -1,5 +1,6 @@
 package canttouchthis.client;
 
+import canttouchthis.common.CryptoServices;
 import canttouchthis.common.IChatSession;
 import canttouchthis.common.Message;
 import canttouchthis.common.KeyEstablishment;
@@ -16,8 +17,11 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.security.*;
 import java.security.spec.X509EncodedKeySpec;
+import javax.crypto.CipherOutputStream;
+import javax.crypto.CipherInputStream;
 import javax.crypto.KeyAgreement;
 import javax.crypto.spec.SecretKeySpec;
+import javax.crypto.Cipher;
 
 //Exceptions
 import java.security.spec.InvalidKeySpecException;
@@ -35,6 +39,8 @@ public class ClientSession implements IChatSession {
     private InetAddress addr;
     private int port;
     private Socket connection;
+
+    private Key sharedSecret;
 
     /**
      * Attempts to connect to the socket server on a given address and port.
@@ -116,7 +122,8 @@ public class ClientSession implements IChatSession {
             //Create shared secret to use
             byte[] bytey = keyAgree.generateSecret();
 
-            Key sharedSecret = new SecretKeySpec(bytey, 0, bytey.length, "AES");
+            // Truncate secret key to 16 bytes (for AES symmetric encryption)
+            sharedSecret = new SecretKeySpec(bytey, 0, 16, "AES");
 
             //System.out.println(sharedSecret.getEncoded());
 
@@ -149,10 +156,16 @@ public class ClientSession implements IChatSession {
      * @param m Message to be sent.
      * @throws IOException If an error is encountered sending over the websocket.
      */
-    public void sendMessage(Message m) throws IOException {
-        // TODO: encrypt object before writing
-        ObjectOutputStream oos = new ObjectOutputStream(connection.getOutputStream());
+    public void sendMessage(Message m) throws Exception {
+
+        // initialize cipher
+        Cipher c = (new CryptoServices()).getEncryptCipher(sharedSecret);
+        CipherOutputStream cipherStream = new CipherOutputStream(connection.getOutputStream(), c);
+
+        // pipe object output into encryption cipher
+        ObjectOutputStream oos = new ObjectOutputStream(cipherStream);
         oos.writeObject(m);
+
     }
 
     /**
@@ -161,9 +174,11 @@ public class ClientSession implements IChatSession {
      * @return New Message object from server.
      * @throws IOException If an error is encountered reading from the websocket stream.
      */
-    public Message getNextMessage() throws IOException {
-        // TODO decrypt object before reading
-        ObjectInputStream ois = new ObjectInputStream(connection.getInputStream());
+    public Message getNextMessage() throws Exception {
+
+        Cipher c = (new CryptoServices()).getDecryptCipher(sharedSecret);
+        CipherInputStream cipherStream = new CipherInputStream(connection.getInputStream(), c);
+        ObjectInputStream ois = new ObjectInputStream(cipherStream);
 
         try {
             // TODO: what if we get sent an object that's not a Message?

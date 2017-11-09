@@ -36,7 +36,7 @@ public class TestClientServerConnection extends TestCase {
             cThread.join();
             s.close();
         }
-        catch (IOException|InterruptedException ex) {
+        catch (Exception ex) {
             assertTrue("Exception when sending message!", false);
         }
 
@@ -68,7 +68,7 @@ public class TestClientServerConnection extends TestCase {
             c.sendMessage(m);
             sThread.join();
         }
-        catch (IOException|InterruptedException ex) {
+        catch (Exception ex) {
             assertTrue("Exception when sending message!", false);
         }
 
