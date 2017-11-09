@@ -22,7 +22,7 @@ public class TestCryptoServices extends TestCase {
          * and then return its respective ciphertext back to it as well.
          */
         CryptoServices cs = new CryptoServices();
-        byte[] ciphertext = cs.encryptSymmetric(message, key);
+        byte[] ciphertext = cs.encryptSymmetric(message.getBytes(), key);
         String newPlainText = cs.decryptSymmetric(ciphertext, key);
 
         assertEquals(message, newPlainText);

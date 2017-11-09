@@ -39,8 +39,8 @@ public class CryptoServices {
     public byte[] encryptSymmetric(byte[] plaintext, Key key) throws Exception {
         Cipher c = Cipher.getInstance("AES/CBC/PKCS5Padding");
         c.init(Cipher.ENCRYPT_MODE, key, ivspec);
-        byte[] ciphertext = new byte[c.getOutputSize(ptBytes.length)];
-        c.doFinal(ptBytes, 0, ptBytes.length, ciphertext);
+        byte[] ciphertext = new byte[c.getOutputSize(plaintext.length)];
+        c.doFinal(plaintext, 0, plaintext.length, ciphertext);
 
         return ciphertext;
     }
