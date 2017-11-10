@@ -123,33 +123,17 @@ public class ServerSession implements IChatSession {
 
             Key clientPublicKey = fact.generatePublic(new X509EncodedKeySpec(clientPubKeyByte));
 
-//            String str = Base64.getEncoder().encodeToString(clientPubKeyByte);
-//            System.out.println(str.length());
-//            System.out.println(str);
-
-
-
             //send our own length over
             OutputStream socketLengthStream = s.getOutputStream();
             DataOutputStream dataOut = new DataOutputStream(socketLengthStream);
 
-            //System.out.println(pubByte.length);
-
-
             dataOut.writeInt(pubByte.length);
-            //too soon? overwriting the write with 0?
             socketLengthStream.flush();
-
-            //String str = Base64.getEncoder().encodeToString(pubByte);
-            //System.out.println(str.length());
-            //System.out.println(str);
-
 
             //Send our own pub key byte[]
             OutputStream socketOutputStream = s.getOutputStream();
             DataOutputStream data = new DataOutputStream(socketOutputStream);
             data.write(pubByte, 0, pubByte.length);
-
 
             //establish KeyAgreement
             KeyAgreement keyAgree = KeyAgreement.getInstance("DiffieHellman");
@@ -164,10 +148,7 @@ public class ServerSession implements IChatSession {
             // Truncate key at 16 bytes (128 bits) for AES
             sharedSecret = new SecretKeySpec(bytey, 0, 16, "AES");
 
-            //System.out.println(sharedSecret.getEncoded());
-
             socketOutputStream.flush();
-
 
         }
         catch (IOException|NoSuchAlgorithmException|InvalidKeyException|InvalidKeySpecException ex) {

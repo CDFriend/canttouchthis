@@ -55,41 +55,52 @@ public class CryptoServices {
     }
 
 
-    /**
-     * Encrypt plaintext with AES.
+    /*
+     * ***DEPRECATED***
      * 
-     * @param plaintext Byte array containing message.
-     * @param key Key passed to method to encrypt under.
-     * @throws Exception For all possible exceptions (i.e. invalid key, bad padding, etc.)
-     */
-    public byte[] encryptSymmetric(byte[] plaintext, Key key) throws Exception {
-        Cipher c = Cipher.getInstance("AES/CTR/PKCS5Padding");
-        c.init(Cipher.ENCRYPT_MODE, key, ivspec);
-        byte[] ciphertext = new byte[c.getOutputSize(plaintext.length)];
-        c.doFinal(plaintext, 0, plaintext.length, ciphertext);
-
-        return ciphertext;
-    }
-
-    /**
-     * Decrypt ciphertext with AES.
+     * Cipher initialization, encryption/decryption services now
+     * handled by getEncryptCipher and getDecryptCipher.
      * 
-     * @param ciphertext Byte array containing message.
-     * @param key Key passed to method to encrypt under.
-     * @throws Exception For all possible exceptions (i.e. invalid key, bad padding, etc.)
+     * NOTE: encryptSymmetric and decryptSymmetric are no longer in use.
+     * 
+     * ***DEPRECATED***
+     * 
      */
-    public String decryptSymmetric(byte[] ciphertext, Key key) throws Exception {
-        Cipher c = Cipher.getInstance("AES/CTR/PKCS5Padding");
-        c.init(Cipher.DECRYPT_MODE, key, ivspec);
-        byte[] newPlaintext = new byte[c.getOutputSize(ciphertext.length)];
-        c.doFinal(ciphertext, 0, newPlaintext.length, newPlaintext);
+    // /**
+    //  * Encrypt plaintext with AES.
+    //  * 
+    //  * @param plaintext Byte array containing message.
+    //  * @param key Key passed to method to encrypt under.
+    //  * @throws Exception For all possible exceptions (i.e. invalid key, bad padding, etc.)
+    //  */
+    // public byte[] encryptSymmetric(byte[] plaintext, Key key) throws Exception {
+    //     Cipher c = Cipher.getInstance("AES/CTR/PKCS5Padding");
+    //     c.init(Cipher.ENCRYPT_MODE, key, ivspec);
+    //     byte[] ciphertext = new byte[c.getOutputSize(plaintext.length)];
+    //     c.doFinal(plaintext, 0, plaintext.length, ciphertext);
 
-        // find last non-zero byte (O(1) since there padding bits is upper bounded by blocksize)
-        int lastCharInd = newPlaintext.length - 1;
-        while (newPlaintext[lastCharInd] == 0)
-            lastCharInd--;
+    //     return ciphertext;
+    // }
 
-        return new String(newPlaintext, 0, lastCharInd + 1);
-    }
+    // /**
+    //  * Decrypt ciphertext with AES.
+    //  * 
+    //  * @param ciphertext Byte array containing message.
+    //  * @param key Key passed to method to encrypt under.
+    //  * @throws Exception For all possible exceptions (i.e. invalid key, bad padding, etc.)
+    //  */
+    // public String decryptSymmetric(byte[] ciphertext, Key key) throws Exception {
+    //     Cipher c = Cipher.getInstance("AES/CTR/PKCS5Padding");
+    //     c.init(Cipher.DECRYPT_MODE, key, ivspec);
+    //     byte[] newPlaintext = new byte[c.getOutputSize(ciphertext.length)];
+    //     c.doFinal(ciphertext, 0, newPlaintext.length, newPlaintext);
+
+    //     // find last non-zero byte (O(1) since there padding bits is upper bounded by blocksize)
+    //     int lastCharInd = newPlaintext.length - 1;
+    //     while (newPlaintext[lastCharInd] == 0)
+    //         lastCharInd--;
+
+    //     return new String(newPlaintext, 0, lastCharInd + 1);
+    // }
 }
 
