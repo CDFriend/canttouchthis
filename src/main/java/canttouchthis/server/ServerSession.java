@@ -45,6 +45,7 @@ public class ServerSession implements IChatSession {
     private Key sharedSecret;
 
     boolean useConf;
+    boolean useInt;
 
     /**
      * Create a server on the default port.
@@ -91,28 +92,27 @@ public class ServerSession implements IChatSession {
         Key privKey = es.getPrivateKey();
         Key pubKey = es.getPublicKey();
         byte[] pubByte = pubKey.getEncoded();
-        useConf = true;
+
 
         try {
 
             server = new ServerSocket(port);
             s = server.accept();
-            //Create public key exchange object
-            //call for send
-            //call for listen
 
+            int flags = s.getInputStream().read();
+
+            useConf = (flags & 1) == 1;
+            useInt = (flags & 2) == 2;
+
+            if (useConf != true){
+              channel = s;
+              return true;
+            }
 
             //receive client pub key in form of byte[]
             InputStream serverInputStream = s.getInputStream();
             DataInputStream dataIn = new DataInputStream(serverInputStream);
             int pubKeyLength = dataIn.readInt();
-
-            //if we got a length of 0, then we didn't get a key, so we don't use encryption
-            if (pubKeyLength == 0){
-              channel = s;
-              useConf = false;
-              return true;
-            }
 
 
             byte[] clientPubKeyByte = new byte[pubKeyLength];

@@ -37,6 +37,7 @@ public class ClientSession implements IChatSession {
 
     private Key sharedSecret;
     boolean useConf;
+    boolean useInt; 
 
     /**
      * Attempts to connect to the socket server on a given address and port.
@@ -47,10 +48,11 @@ public class ClientSession implements IChatSession {
      *
      * @return Whether or not the connection was successful.
      */
-    public boolean connect(String addr, int port, boolean useConf, boolean useInteg) throws UnknownHostException {
+    public boolean connect(String addr, int port, boolean useConf, boolean useInt) throws UnknownHostException {
         this.addr = InetAddress.getByName(addr);
         this.port = port;
         this.useConf = useConf;
+        this.useInt = useInt;
 
         KeyEstablishment es = new KeyEstablishment();
         Key privKey = es.getPrivateKey();
@@ -63,15 +65,15 @@ public class ClientSession implements IChatSession {
         if (useConf) {
             flags = flags | 1;
         }
-        if (useInteg) {
+        if (useInt) {
             flags = flags | 2;
         }
 
         // TODO: send flags number to server
 
-
           try {
               this.connection = new Socket(this.addr, this.port);
+              connection.getOutputStream().write(flags);
 
               if (useConf == true) {
 
