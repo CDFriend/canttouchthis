@@ -47,7 +47,7 @@ public class ClientSession implements IChatSession {
      *
      * @return Whether or not the connection was successful.
      */
-    public boolean connect(String addr, int port, boolean useConf) throws UnknownHostException {
+    public boolean connect(String addr, int port, boolean useConf, boolean useInteg) throws UnknownHostException {
         this.addr = InetAddress.getByName(addr);
         this.port = port;
         this.useConf = useConf;
@@ -59,71 +59,82 @@ public class ClientSession implements IChatSession {
         //encode keys
         byte[] pubByte = pubKey.getEncoded();
 
-        if (useConf == true){
-          try {
+        int flags = 0;
+        if (useConf) {
+            flags = flags | 1;
+        }
+        if (useInteg) {
+            flags = flags | 2;
+        }
 
+        // TODO: send flags number to server
+
+
+          try {
               this.connection = new Socket(this.addr, this.port);
 
+              if (useConf == true) {
 
-              //send length
-              int length = pubByte.length;
+                  //send length
+                  int length = pubByte.length;
 
-              //if something, then call on public key exchange
-              //PublicKeyExchange(pubKey, length)
+                  //if something, then call on public key exchange
+                  //PublicKeyExchange(pubKey, length)
 
-              OutputStream socketOutputStream = connection.getOutputStream();
-              DataOutputStream data = new DataOutputStream(socketOutputStream);
-              data.writeInt(length);
+                  OutputStream socketOutputStream = connection.getOutputStream();
+                  DataOutputStream data = new DataOutputStream(socketOutputStream);
+                  data.writeInt(length);
 
-              socketOutputStream.flush();
+                  socketOutputStream.flush();
 
-              //Create public key exchange object
-              //call for send
+                  //Create public key exchange object
+                  //call for send
 
-              OutputStream socketStream = connection.getOutputStream();
-              DataOutputStream dataStream = new DataOutputStream(socketStream);
-              dataStream.write(pubByte, 0, pubByte.length);
+                  OutputStream socketStream = connection.getOutputStream();
+                  DataOutputStream dataStream = new DataOutputStream(socketStream);
+                  dataStream.write(pubByte, 0, pubByte.length);
 
-              //wait for server to send their public key byte[]
-              InputStream serverInputStream = connection.getInputStream();
-              DataInputStream dataIn = new DataInputStream(serverInputStream);
+                  //wait for server to send their public key byte[]
+                  InputStream serverInputStream = connection.getInputStream();
+                  DataInputStream dataIn = new DataInputStream(serverInputStream);
 
-              int pubKeyLength = dataIn.readInt();
-              //if we got a length of 0, then we didn't get a key, so we don't use encryption
-              if (pubKeyLength == 0){
+                  int pubKeyLength = dataIn.readInt();
+                  //if we got a length of 0, then we didn't get a key, so we don't use encryption
+                  if (pubKeyLength == 0) {
 
-                return true;
+                      return true;
+                  }
+
+
+                  byte[] serverPubKeyByte = new byte[pubKeyLength];
+                  dataIn.read(serverPubKeyByte, 0, pubKeyLength);
+
+                  //rebuild the public key from the opposite side
+                  X509EncodedKeySpec x509spec = new X509EncodedKeySpec(serverPubKeyByte);
+                  Key serverPublicKey = KeyFactory.getInstance("DiffieHellman").generatePublic(x509spec);
+
+                  //establish KeyAgreement - SunJCE
+                  KeyAgreement keyAgree = KeyAgreement.getInstance("DiffieHellman");
+                  keyAgree.init(privKey);
+                  keyAgree.doPhase(serverPublicKey, true);
+
+                  //Create shared secret to use
+                  byte[] bytey = keyAgree.generateSecret();
+
+                  // Truncate secret key to 16 bytes (for AES symmetric encryption)
+                  sharedSecret = new SecretKeySpec(bytey, 0, 16, "AES");
+
+                  //System.out.println(sharedSecret.getEncoded());
+
+                  socketOutputStream.flush();
               }
-
-
-              byte[] serverPubKeyByte = new byte[pubKeyLength];
-              dataIn.read(serverPubKeyByte, 0, pubKeyLength);
-
-              //rebuild the public key from the opposite side
-              X509EncodedKeySpec x509spec = new X509EncodedKeySpec(serverPubKeyByte);
-              Key serverPublicKey = KeyFactory.getInstance("DiffieHellman").generatePublic(x509spec);
-
-              //establish KeyAgreement - SunJCE
-              KeyAgreement keyAgree = KeyAgreement.getInstance("DiffieHellman");
-              keyAgree.init(privKey);
-              keyAgree.doPhase(serverPublicKey, true);
-
-              //Create shared secret to use
-              byte[] bytey = keyAgree.generateSecret();
-
-              // Truncate secret key to 16 bytes (for AES symmetric encryption)
-              sharedSecret = new SecretKeySpec(bytey, 0, 16, "AES");
-
-              //System.out.println(sharedSecret.getEncoded());
-
-              socketOutputStream.flush();
 
           }
           catch (IOException|NoSuchAlgorithmException|InvalidKeyException|InvalidKeySpecException ex) {
               ex.printStackTrace();
               return false;
           }
-        }
+
         return true;
     }
 
