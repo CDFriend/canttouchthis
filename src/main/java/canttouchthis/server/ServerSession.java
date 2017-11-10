@@ -44,6 +44,8 @@ public class ServerSession implements IChatSession {
 
     private Key sharedSecret;
 
+    boolean useConf;
+
     /**
      * Create a server on the default port.
      */
@@ -89,6 +91,7 @@ public class ServerSession implements IChatSession {
         Key privKey = es.getPrivateKey();
         Key pubKey = es.getPublicKey();
         byte[] pubByte = pubKey.getEncoded();
+        useConf = true;
 
         try {
 
@@ -107,6 +110,7 @@ public class ServerSession implements IChatSession {
             //if we got a length of 0, then we didn't get a key, so we don't use encryption
             if (pubKeyLength == 0){
               channel = s;
+              useConf = false;
               return true;
             }
 
@@ -200,16 +204,24 @@ public class ServerSession implements IChatSession {
      */
     public void sendMessage(ChatMessage m) throws Exception {
 
-        // pack ChatMessage into MessagePacket (include Digest)
-        MessagePacket packet = new MessagePacket(m);
+      // pack ChatMessage into MessagePacket (include Digest)
+      MessagePacket packet = new MessagePacket(m);
+      if (useConf == true){
 
-        // initialize encryption cipher
-        Cipher c = (new CryptoServices()).getEncryptCipher(sharedSecret);
-        CipherOutputStream cipherStream = new CipherOutputStream(channel.getOutputStream(), c);
+          // initialize encryption cipher
+          Cipher c = (new CryptoServices()).getEncryptCipher(sharedSecret);
+          CipherOutputStream cipherStream = new CipherOutputStream(channel.getOutputStream(), c);
 
-        // initialize pipe and write to object output stream
-        ObjectOutputStream oos = new ObjectOutputStream(cipherStream);
-        oos.writeObject(packet);
+          // initialize pipe and write to object output stream
+          ObjectOutputStream oos = new ObjectOutputStream(cipherStream);
+          oos.writeObject(packet);
+      }
+
+      else{
+        ObjectOutputStream nonEncryptedOutput = new ObjectOutputStream(channel.getOutputStream());
+        nonEncryptedOutput.writeObject(packet);
+      }
+
 
     }
 
@@ -220,6 +232,8 @@ public class ServerSession implements IChatSession {
      * @throws IOException If any errors occur when getting the socket input stream.
      */
     public MessagePacket getNextMessage() throws Exception {
+
+      if (useConf == true){
         Cipher c = (new CryptoServices()).getDecryptCipher(sharedSecret);
         CipherInputStream cipherStream = new CipherInputStream(channel.getInputStream(), c);
 
@@ -236,6 +250,11 @@ public class ServerSession implements IChatSession {
         catch (ClassNotFoundException ex) {
             return null;
         }
+      }
+      else{
+        ObjectInputStream nonEncryptedInput = new ObjectInputStream(channel.getInputStream());
+        return (MessagePacket) nonEncryptedInput.readObject();
+      }
     }
 
 }
