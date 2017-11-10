@@ -257,4 +257,12 @@ public class ServerSession implements IChatSession {
       }
     }
 
+    public boolean usesConfidentiality() {
+        return useConf;
+    }
+
+    public boolean checksIntegrity() {
+        return useInt;
+    }
+
 }

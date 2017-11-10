@@ -209,4 +209,12 @@ public class ClientSession implements IChatSession {
     }
   }
 
+  public boolean usesConfidentiality() {
+        return useConf;
+  }
+
+  public boolean checksIntegrity() {
+        return useInt;
+  }
+
 }

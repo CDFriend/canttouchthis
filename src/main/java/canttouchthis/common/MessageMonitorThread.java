@@ -58,8 +58,10 @@ public class MessageMonitorThread extends Thread {
                 }
 
                 // check message digests
-                if (!(packet.checkMessageDigest())) {
-                    this._ui.showWarning("Digests do not match - message may have been intercepted!");
+                if (this._session.checksIntegrity()) {
+                    if (!(packet.checkMessageDigest())) {
+                        this._ui.showWarning("Digests do not match - message may have been intercepted!");
+                    }
                 }
 
                 this._ui.addMessage(m);

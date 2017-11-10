@@ -20,4 +20,8 @@ public interface IChatSession {
      */
     public void sendMessage(ChatMessage m) throws Exception;
 
+    public boolean usesConfidentiality();
+
+    public boolean checksIntegrity();
+
 }
