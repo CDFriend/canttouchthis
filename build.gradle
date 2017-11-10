@@ -82,7 +82,10 @@ task server_jar(type:Jar) {
     }
 
     manifest {
-        attributes "Main-Class" : "canttouchthis.server.ServerApp"
+        attributes "Main-Class" : "canttouchthis.server.ServerApp",
+
+        // Class path code from: https://oliverveits.wordpress.com/2016/11/15/how-to-build-a-lean-jar-file-with-gradle/
+        "Class-Path" : ". deps/" + configurations.compile.collect { it.getName() }.join(' deps/')
     }
 }
 
@@ -110,7 +113,12 @@ task client_jar(type:Jar) {
 server_jar.dependsOn copyLibsToJar
 client_jar.dependsOn copyLibsToJar
 
-task make_dist(type: Copy, dependsOn: [server_jar, client_jar]) {
+task copy_assets(type: Copy) {
+    from "assets/"
+    into dist_folder + "/assets"
+}
+
+task make_dist(type: Copy, dependsOn: [server_jar, client_jar, copy_assets]) {
     from ("./") {
         include "*.sqlite"
     }
