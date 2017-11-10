@@ -103,6 +103,14 @@ public class ServerSession implements IChatSession {
             InputStream serverInputStream = s.getInputStream();
             DataInputStream dataIn = new DataInputStream(serverInputStream);
             int pubKeyLength = dataIn.readInt();
+
+            //if we got a length of 0, then we didn't get a key, so we don't use encryption
+            if (pubKeyLength == 0){
+              channel = s;
+              return true;
+            }
+
+
             byte[] clientPubKeyByte = new byte[pubKeyLength];
             dataIn.read(clientPubKeyByte, 0, pubKeyLength);
 

@@ -80,7 +80,7 @@ class ClientApp {
 
                 // TODO: establish keys and encrypt messages. Beary insecure!
                 try {
-                    if (app.sess.connect(host, port)) {
+                    if (app.sess.connect(host, port, useConf)) {
                         // connection was successful
                         app.connectController.hideView();
                         app.conversationController.showView();
