@@ -37,7 +37,7 @@ public class ClientSession implements IChatSession {
 
     private Key sharedSecret;
     boolean useConf;
-    boolean useInt; 
+    boolean useInt;
 
     /**
      * Attempts to connect to the socket server on a given address and port.
@@ -69,9 +69,10 @@ public class ClientSession implements IChatSession {
             flags = flags | 2;
         }
 
-        // TODO: send flags number to server
-
           try {
+
+              //send flags number to server
+
               this.connection = new Socket(this.addr, this.port);
               connection.getOutputStream().write(flags);
 
@@ -80,9 +81,6 @@ public class ClientSession implements IChatSession {
                   //send length
                   int length = pubByte.length;
 
-                  //if something, then call on public key exchange
-                  //PublicKeyExchange(pubKey, length)
-
                   OutputStream socketOutputStream = connection.getOutputStream();
                   DataOutputStream data = new DataOutputStream(socketOutputStream);
                   data.writeInt(length);
@@ -90,8 +88,6 @@ public class ClientSession implements IChatSession {
                   socketOutputStream.flush();
 
                   //Create public key exchange object
-                  //call for send
-
                   OutputStream socketStream = connection.getOutputStream();
                   DataOutputStream dataStream = new DataOutputStream(socketStream);
                   dataStream.write(pubByte, 0, pubByte.length);
@@ -125,8 +121,6 @@ public class ClientSession implements IChatSession {
 
                   // Truncate secret key to 16 bytes (for AES symmetric encryption)
                   sharedSecret = new SecretKeySpec(bytey, 0, 16, "AES");
-
-                  //System.out.println(sharedSecret.getEncoded());
 
                   socketOutputStream.flush();
               }
