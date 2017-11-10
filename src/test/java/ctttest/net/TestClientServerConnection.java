@@ -63,7 +63,7 @@ public class TestClientServerConnection extends TestCase {
         try {
             sThread.start();
             Thread.sleep(3000);
-            c.connect("127.0.0.1", 50000);
+            c.connect("127.0.0.1", 50000, false);
             c.sendMessage(m);
             sThread.join();
         }

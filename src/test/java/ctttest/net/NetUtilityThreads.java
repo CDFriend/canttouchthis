@@ -34,7 +34,7 @@ public class NetUtilityThreads {
         public void run() {
             try {
                 Thread.sleep(3000);
-                c.connect(SERVER_ADDR, SERVER_PORT);
+                c.connect(SERVER_ADDR, SERVER_PORT, false);
                 message = (ChatMessage) c.getNextMessage().getContent();
                 success = true;
             }
